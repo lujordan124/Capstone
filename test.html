@@ -19,27 +19,50 @@
 		<pre id="editor"></pre>
 		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
-		<script>
-			    var editor = ace.edit("editor");
-			    editor.setTheme("ace/theme/twilight");
-			    editor.getSession().setMode("ace/mode/javascript");
+		<div>
+			<script>
+				    var editor = ace.edit("editor");
+				    editor.setTheme("ace/theme/twilight");
+				    editor.getSession().setMode("ace/mode/javascript");
 
-			    editor.getSession().on('change', function(e) {
-			    	var startRow = e["start"]["row"];
-			    	var startColumn = e["start"]["column"];
-			    	var endRow = e["end"]["row"];
-			    	var endColumn = e["end"]["column"];
-			    	var action = e["action"];
-			    	var lines = e["lines"];
+				    editor.getSession().on('change', function(e) {
+				    	var startRow = e["start"]["row"];
+				    	var startColumn = e["start"]["column"];
+				    	var endRow = e["end"]["row"];
+				    	var endColumn = e["end"]["column"];
+				    	var action = e["action"];
+				    	var lines = e["lines"];
 
-			    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
+				    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-			    	alert(keystrokeLog);
-			    });
+				    	alert(keystrokeLog);
+				    });
 
-			    $("#submit").on("click", function() {
-			    	var value = editor.getSession().getValue();
-			    });
+				    $("#submit").on("click", function() {
+				    	var value = editor.getSession().getValue();
+				    });
+			</script>
+		</div>
+
+		<div> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
+			<button id="testMode" type="button" onclick="requestFullScreen(document.body)">FUCK THIS </button>
+		</div>
+
+		<script type="text/javascript"> 
+			$document.read
+
+			function requestFullScreen(element) {
+				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+				if (requestMethod) {
+					requestMethod.call(element);
+				} else if (typeof window.ActiveXObject !== "undefined") {
+					var wscript  = new ActiveXObject("WScript.Shell");
+					if (wscript != null) {
+						wscript.SendKeys("{F11}");
+					}
+				}
+			}
 		</script>
 
 	</body>
