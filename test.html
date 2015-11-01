@@ -1,12 +1,13 @@
 <html>
 	<head>
 		<title> ace </title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	</head>
 	<body>
 		<style type="text/css" media="screen">
 		    #editor { 
 		        margin: 0;
-		        position: absolute;
+		        position: relative;
 		        top: 0;
 		        bottom: 0;
 		        left: 0;
@@ -16,40 +17,64 @@
 		    }
 		  </style>
 
-		<pre id="editor"></pre>
-		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<table>
+		<tr>
+			<td>
+			<div>
+			<pre id="editor"></pre>
+			<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+				<script>
+					    var editor = ace.edit("editor");
+					    editor.setTheme("ace/theme/twilight");
+					    editor.getSession().setMode("ace/mode/javascript");
 
-		<div>
-			<script>
-				    var editor = ace.edit("editor");
-				    editor.setTheme("ace/theme/twilight");
-				    editor.getSession().setMode("ace/mode/javascript");
+					    editor.getSession().on('change', function(e) {
+					    	var startRow = e["start"]["row"];
+					    	var startColumn = e["start"]["column"];
+					    	var endRow = e["end"]["row"];
+					    	var endColumn = e["end"]["column"];
+					    	var action = e["action"];
+					    	var lines = e["lines"];
 
-				    editor.getSession().on('change', function(e) {
-				    	var startRow = e["start"]["row"];
-				    	var startColumn = e["start"]["column"];
-				    	var endRow = e["end"]["row"];
-				    	var endColumn = e["end"]["column"];
-				    	var action = e["action"];
-				    	var lines = e["lines"];
+					    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-				    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
+					    	alert(keystrokeLog);
+					    });
 
-				    	alert(keystrokeLog);
-				    });
+					    $("#submit").on("click", function() {
+					    	var value = editor.getSession().getValue();
+					    });
+				</script>
+			</div>
+			</td>
+		</tr>
 
-				    $("#submit").on("click", function() {
-				    	var value = editor.getSession().getValue();
-				    });
-			</script>
-		</div>
-
-		<div> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-			<button id="testMode" type="button" onclick="requestFullScreen(document.body)">FUCK THIS </button>
-		</div>
+		<tr>
+			<td>
+				<div>
+					<button id="testMode" type="button" onclick="requestFullScreen(document.body)">Begin Test</button>
+				</div>
+			</td>
+		</tr>
+		</table>
 
 		<script type="text/javascript"> 
-			$document.read
+
+			document.addEventListener("fullscreenchange", didChange);
+			document.addEventListener("webkitfullscreenchange", didChange);
+			document.addEventListener("mozfullscreenchange", didChange);
+				
+			function didChange() {
+				// alert("ERROR!!!");
+				var height = $(document).height();
+				var sizeWin = window.innerWidth + " " + window.innerHeight;
+				alert(sizeWin);
+				if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
+					// alert("EXITED TESTING MODE")
+				} else {
+					// alert("ENTERED TESTING MODE")
+				}
+			}
 
 			function requestFullScreen(element) {
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
