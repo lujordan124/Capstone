@@ -23,6 +23,8 @@
 			<div id = "description"> Description of problem here </div>
 			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">ENTER FULLSCREEN</button>
 		</center>
+		<div id="countdown">
+		</div>
 		<div id = "bottom">
 			<div id = "left">
 				<h2 class = "pull-left"> Code here</h2>
@@ -62,13 +64,14 @@
 		</script>
 
 		<script type ="text/javascript">
-			$(window).focusin(function() {
-				alert("FOCUSED.");
-			});
-			$(window).blur(function(){
-				alert("NOT FOCUSED.");
-			});
+			// $(window).focusin(function() {
+			// 	alert("FOCUSED.");
+			// });
+			// $(window).blur(function(){
+			// 	alert("NOT FOCUSED.");
+			// });
 		</script>
+
 
 		<script type="text/javascript"> 
 
@@ -80,11 +83,11 @@
 				// alert("ERROR!!!");
 				var height = $(document).height();
 				var sizeWin = window.innerWidth + " " + window.innerHeight;
-				alert(sizeWin);
+				// alert(sizeWin);
 				if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
-					// alert("EXITED TESTING MODE")
+					// alert("EXITED TESTING MODE");
 				} else {
-					// alert("ENTERED TESTING MODE")
+					// alert("ENTERED TESTING MODE");
 				}
 			}
 
@@ -100,6 +103,20 @@
 					}
 				}
 			}
+
+			var date = new Date().getTime();
+			var timerTime =  date + (45 * 60 * 1000);
+
+			setInterval(function() {
+				var counterDate = new Date().getTime()
+				var countdown = document.getElementById('countdown');
+				var secondsLeft = timerTime - counterDate;
+
+				var minutes = Math.floor(secondsLeft/60000);
+				var seconds = ((secondsLeft%60000)/1000).toFixed(0);
+				
+				countdown.innerHTML = '' + minutes + ':' + seconds;
+			}, 1000);
 		</script>
 
 	</body>
