@@ -2,54 +2,64 @@
 	<head>
 		<title> ace </title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-	</head>
-	<body>
-		<style type="text/css" media="screen">
-		    #editor { 
-		        margin: 0;
-		        position: relative;
-		        top: 0;
-		        bottom: 0;
-		        left: 0;
-		        right: 0;
-		        width: 500px;
-		        height: 300px;
-		    }
-		  </style>
 
-<<<<<<< HEAD
-		<pre id="editor"></pre>
-		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="test.css">
+
+		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-		<div>
-			<script>
-			    var editor = ace.edit("editor");
-			    editor.setTheme("ace/theme/twilight");
-			    editor.getSession().setMode("ace/mode/javascript");
+		<!-- ACE -->
+		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
-			    editor.getSession().on('change', function(e) {
-			    	var startRow = e["start"]["row"];
-			    	var startColumn = e["start"]["column"];
-			    	var endRow = e["end"]["row"];
-			    	var endColumn = e["end"]["column"];
-			    	var action = e["action"];
-			    	var lines = e["lines"];
-
-			    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
-
-			    	alert(keystrokeLog);
-			    });
-
-			    $("#submit").on("click", function() {
-			    	var value = editor.getSession().getValue();
-			    });
-
-			    //have an event listener on document
-			    //var bod = document.body;
-			    //bod.addEventListener()
-			</script>
+		<!-- Latest compiled JavaScript -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+	</head>
+	<body>
+		<center>
+			<h1> Problem #1: [NAME OF PROBLEM] </h1>
+			<div id = "description"> Description of problem here </div>
+			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">ENTER FULLSCREEN</button>
+		</center>
+		<div id = "bottom">
+			<div id = "left">
+				<h2 class = "pull-left"> Code here</h2>
+				<button class="btn btn-default pull-right" id = "compile">COMPILE CODE</button>
+				<pre id="editor"></pre><br>
+			</div>
+			<div id = "right">
+				<h2> The results of the test </h2>
+				<textarea id = "results">Hi</textarea>
+			</div>
 		</div>
+
+		<script>
+		    var editor = ace.edit("editor");
+		    editor.setTheme("ace/theme/twilight");
+		    editor.getSession().setMode("ace/mode/javascript");
+		    editor.getSession().on('change', function(e) {
+		    	var startRow = e["start"]["row"];
+		    	var startColumn = e["start"]["column"];
+		    	var endRow = e["end"]["row"];
+		    	var endColumn = e["end"]["column"];
+		    	var action = e["action"];
+		    	var lines = e["lines"];
+
+		    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
+
+		    	alert(keystrokeLog);
+		    });
+
+		    $("#submit").on("click", function() {
+		    	var value = editor.getSession().getValue();
+		    });
+
+		    //have an event listener on document
+		    //var bod = document.body;
+		    //bod.addEventListener()
+		</script>
 
 		<script type ="text/javascript">
 			$(window).focusin(function() {
@@ -58,76 +68,7 @@
 			$(window).blur(function(){
 				alert("NOT FOCUSED.");
 			});
-			
-				  /*document.addEventListener("fullscreenchange", function () {
-					    if (document.fullscreenElement != null) {
-					    	alert("HI");
-					      console.info("Went full screen");
-					    } else {
-					    	alert("YO");
-					      console.info("Exited full screen");
-					    }
-				  	});*/
-				//}
-				//else if (document.msRequestFullscreen) {
-				  /*document.addEventListener("MSFullscreenChange", function () {
-					    if (document.msFullscreenElement != null) {
-					    	alert("HI2");
-					      console.info("Went full screen");
-					    } else {
-					    	alert("YO2");
-					      console.info("Exited full screen");
-					    }
-				  	});*/
-				//}
 		</script>
-
-		<div> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> 
-			<button id="testMode" type="button" onclick="requestFullScreen(document.body)">FULLSCREEN</button>
-		</div>
-
-		<script type="text/javascript"> 
-=======
-		<table>
-		<tr>
-			<td>
-			<div>
-			<pre id="editor"></pre>
-			<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-				<script>
-					    var editor = ace.edit("editor");
-					    editor.setTheme("ace/theme/twilight");
-					    editor.getSession().setMode("ace/mode/javascript");
-
-					    editor.getSession().on('change', function(e) {
-					    	var startRow = e["start"]["row"];
-					    	var startColumn = e["start"]["column"];
-					    	var endRow = e["end"]["row"];
-					    	var endColumn = e["end"]["column"];
-					    	var action = e["action"];
-					    	var lines = e["lines"];
-
-					    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
-
-					    	alert(keystrokeLog);
-					    });
-
-					    $("#submit").on("click", function() {
-					    	var value = editor.getSession().getValue();
-					    });
-				</script>
-			</div>
-			</td>
-		</tr>
-
-		<tr>
-			<td>
-				<div>
-					<button id="testMode" type="button" onclick="requestFullScreen(document.body)">Begin Test</button>
-				</div>
-			</td>
-		</tr>
-		</table>
 
 		<script type="text/javascript"> 
 
@@ -147,12 +88,11 @@
 				}
 			}
 
->>>>>>> b2dab06414796c4f93ff45fba781db6aebd89dd9
 			function requestFullScreen(element) {
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-
 				if (requestMethod) {
 					requestMethod.call(element);
+					document.getElementById("fullscreen").visibility = "hidden";
 				} else if (typeof window.ActiveXObject !== "undefined") {
 					var wscript  = new ActiveXObject("WScript.Shell");
 					if (wscript != null) {
