@@ -38,7 +38,7 @@
 		</div>
 
 		<script>
-		    var editor = ace.edit("editor");
+		    var editor = ace.edit("editor");	
 		    editor.setTheme("ace/theme/twilight");
 		    editor.getSession().setMode("ace/mode/javascript");
 		    editor.getSession().on('change', function(e) {
@@ -51,7 +51,15 @@
 
 		    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-		    	alert(keystrokeLog);
+		    	console.log(JSON.stringify(editor.commands));
+
+		    	editor.commands.on("exec", function(e) {
+		    		if (e.command && e.command.name == 'paste') {
+		    			e.preventDefault();
+		    		}
+		    	});
+
+		    	// alert(keystrokeLog);
 		    });
 
 		    $("#submit").on("click", function() {
