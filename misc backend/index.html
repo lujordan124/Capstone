@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+   
+	<head>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<title>Create a new test or quiz!</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+   
+	<body ng-app = "mainApp">
+	  
+		<div ng-controller = "HelloController" >
+			<h2>Welcome {{helloTo.title}} to my version of Typeform!</h2>
+			<div ng-repeat="item in formData">
+				<input type="text" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
+				<input ng-class="{'blockInput': !item.inlineChecked}" type="text" placeholder="enter text..." ng-model="item.text">
+				<input type="checkbox" name="check" value="inline" ng-model="item.inlineChecked"> Inline
+			</div>
+			<button ng-click="add()">New Item</button>
+		</div>
+
+	  
+	</body>
+</html>
