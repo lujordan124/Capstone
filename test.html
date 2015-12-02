@@ -49,9 +49,11 @@
 		    	var action = e["action"];
 		    	var lines = e["lines"];
 
+		    	console.log(JSON.stringify(e));
+
 		    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-		    	console.log(JSON.stringify(editor.commands));
+		    	// console.log(JSON.stringify(editor.commands));
 
 		    	editor.commands.on("exec", function(e) {
 		    		if (e.command && e.command.name == 'paste') {
@@ -76,7 +78,7 @@
 				
 			});
 			$(window).blur(function(){
-				window.location.replace("offocus.php");
+				// window.location.replace("offocus.php");
 			});
 		</script>
 
@@ -103,6 +105,25 @@
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 				if (requestMethod) {
 					requestMethod.call(element);
+
+					var date = new Date().getTime();
+					var timerTime =  date + (45 * 60 * 1000);
+
+					setInterval(function() {
+						var counterDate = new Date().getTime()
+						var countdown = document.getElementById('countdown');
+						var secondsLeft = timerTime - counterDate;
+
+						var minutes = Math.floor(secondsLeft/60000);
+						var seconds = ((secondsLeft%60000)/1000).toFixed(0);
+						
+						if (seconds > 10) {
+							countdown.innerHTML = '' + minutes + ':' + seconds;
+						} else {
+							countdown.innerHTML = '' + minutes + ':0' + seconds;
+						}
+					}, 1000);
+
 					document.getElementById("fullscreen").visibility = "hidden";
 				} else if (typeof window.ActiveXObject !== "undefined") {
 					var wscript  = new ActiveXObject("WScript.Shell");
@@ -111,20 +132,6 @@
 					}
 				}
 			}
-
-			var date = new Date().getTime();
-			var timerTime =  date + (45 * 60 * 1000);
-
-			setInterval(function() {
-				var counterDate = new Date().getTime()
-				var countdown = document.getElementById('countdown');
-				var secondsLeft = timerTime - counterDate;
-
-				var minutes = Math.floor(secondsLeft/60000);
-				var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-				
-				countdown.innerHTML = '' + minutes + ':' + seconds;
-			}, 1000);
 		</script>
 
 	</body>
