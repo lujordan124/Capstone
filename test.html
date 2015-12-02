@@ -63,6 +63,48 @@
 		    //bod.addEventListener()
 		</script>
 
+		<script>
+		document.ready(function(){
+			//on start quiz
+			$('#startQuiz').click(function() {
+				$.ajax({
+			        type: "POST",
+			        url: "getQuiz.php",
+			        data: {quizNum: quizNum},
+			        success: function(data){
+			        	//retrieve quiz from database in JSON format
+			        	document.getElementById("quizName").innerHTML = data.quizName;
+			        	document.getElementById("questionName").innerHTML = data.questionName;
+			        	document.getElementById("description").innerHTML = data.description;
+			        	var timeAllowed = data.timeAllowed;
+			        }
+	    		});
+			});
+			$('#submitCode').click(function() {
+				$.ajax({
+					type: "POST",
+			        url: "sendCode.php",
+			        data: {code: code},
+			        success: function(data){
+			        	alert("DONE??");
+			        }
+	    		})
+			});
+			$('#compile').click(function() {
+				$.ajax({
+					type: "POST",
+			        url: "compileCode.php",
+			        data: {code: code},
+			        success: function(data){
+			        	document.getElementById("result").innerHTML = data;
+			        	alert("THE RESULTS OF THE COMPILATION?");
+			        }
+	    		})
+			});
+		});
+			
+		</script>
+
 		<script type ="text/javascript">
 			$(window).focusin(function() {
 				
