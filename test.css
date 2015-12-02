@@ -36,6 +36,12 @@ h2 {
 	margin: 2px;
 }
 
+#finish {
+	position:absolute;
+	right:10%;
+	bottom:8%;
+}
+
 #editor { 
    	float: left;
     top: 0;

@@ -19,28 +19,32 @@
 	</head>
 	<body>
 		<center>
-			<h1> Problem #1: [NAME OF PROBLEM] </h1>
-			<div id = "description"> Description of problem here </div>
-			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">ENTER FULLSCREEN</button>
+			<div id = "problem" style="visibility:hidden">
+				<h1 id = "problemNum"> Problem #1: [NAME OF PROBLEM] </h1>
+				<div id = "description"> Description of problem here </div>
+			</div>
+			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
 		</center>
-		<div id="countdown">
+		<div id="countdown" style="visibility:hidden">
 		</div>
-		<div id = "bottom">
+		<div id = "bottom" style="visibility:hidden">
 			<div id = "left">
 				<h2 class = "pull-left"> Code here</h2>
-				<button class="btn btn-default pull-right" id = "compile">COMPILE CODE</button>
+				<button class="btn btn-default pull-right" id = "compile">SUBMIT</button>
 				<pre id="editor"></pre><br>
 			</div>
 			<div id = "right">
 				<h2> The results of the test </h2>
 				<textarea id = "results">Hi</textarea>
 			</div>
+
+			<button class = "btn btn-default" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
 		</div>
 
-		<script>
+		<script type="text/javascript">
 		    var editor = ace.edit("editor");	
 		    editor.setTheme("ace/theme/twilight");
-		    editor.getSession().setMode("ace/mode/javascript");
+		    editor.getSession().setMode("ace/mode/c");
 		    editor.getSession().on('change', function(e) {
 		    	var startRow = e["start"]["row"];
 		    	var startColumn = e["start"]["column"];
@@ -64,9 +68,18 @@
 		    	// alert(keystrokeLog);
 		    });
 
-		    $("#submit").on("click", function() {
+		    $("#compile").on("click", function() {
 		    	var value = editor.getSession().getValue();
 		    });
+
+		    function finishTest(element) {
+		    	document.getElementById("bottom").style.visibility = "hidden";
+				document.getElementById("problem").style.visibility = "hidden";
+				document.getElementById('countdown').style.visibility = "hidden";
+		    	document.webkitExitFullscreen();
+				document.mozCancelFullscreen();
+				document.exitFullscreen();
+		    }
 
 		    //have an event listener on document
 		    //var bod = document.body;
@@ -106,6 +119,7 @@
 				if (requestMethod) {
 					requestMethod.call(element);
 
+					//TIMER FUNCTIONS
 					var date = new Date().getTime();
 					var timerTime =  date + (45 * 60 * 1000);
 
@@ -124,7 +138,10 @@
 						}
 					}, 1000);
 
-					document.getElementById("fullscreen").visibility = "hidden";
+					document.getElementById("fullscreen").style.visibility = "hidden";
+					document.getElementById("bottom").style.visibility = "visible";
+					document.getElementById("problem").style.visibility = "visible";
+
 				} else if (typeof window.ActiveXObject !== "undefined") {
 					var wscript  = new ActiveXObject("WScript.Shell");
 					if (wscript != null) {
