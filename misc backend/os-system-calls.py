@@ -24,4 +24,4 @@ if __name__ == "__main__":
 		else:
 			print 'os not supported'
 	else:
-		printf 'too many file params'
+		print 'too many file params'
