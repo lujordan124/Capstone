@@ -12,14 +12,20 @@
    
 	<body ng-app = "mainApp">
 	  
-		<div ng-controller = "HelloController" >
-			<h2>Welcome {{helloTo.title}} to my version of Typeform!</h2>
-			<div ng-repeat="item in formData">
-				<input type="text" placeholder="{{item.questionPlaceholder}}" ng-model="item.question">
-				<input ng-class="{'blockInput': !item.inlineChecked}" type="text" placeholder="enter text..." ng-model="item.text">
-				<input type="checkbox" name="check" value="inline" ng-model="item.inlineChecked"> Inline
-			</div>
-			<button ng-click="add()">New Item</button>
+		<div ng-controller = "HelloController" class="container">
+			<h2 style="text-align: center">Welcome {{helloTo.title}} to my version of Typeform!</h2>
+			<hr>
+			<form name="testCreationForm">
+				<div class="form-group" ng-repeat="item in formData">
+					<label>Please input question number {{item.number}}.</label>
+					<textarea type="text" placeholder="{{item.questionPlaceholder}}" ng-model="item.question" required></textarea>
+					
+				</div>
+			
+			</form>
+			<button class="btn btn-primary" ng-click="add()">New Question</button>
+			<button class="btn btn-warning" ng-click="remove()">Remove Question</button>
+			<button class="btn btn-info" ng-click="createTest()">Create Quiz/Test</button>
 		</div>
 
 	  

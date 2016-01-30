@@ -7,23 +7,30 @@ mainApp.controller("HelloController", function($scope) {
 
 	$scope.add = function () {
 	  $scope.formData.push({ 
-		inlineChecked: false,
+		number: $scope.formData.length + 1,
 		question: "",
-		questionPlaceholder: "foo",
-		text: ""
+		questionPlaceholder: "eg. write a function that adds two numbers",
 	  });
 	};
 	
+	$scope.remove = function() {
+		$scope.formData.pop();
+	}
+	
     $scope.createTest = function() {
-        $http.post('url', $scope.formData)
-            .success(function(data) { // data consists of json data returned from server side
-                $scope.formData = {}; // clear the form so our user is ready to enter another
-                $scope.questions = data;
-                console.log(data);
-            })
-            .error(function(data) {
-                console.log('Error: ' + data);
-            });
+		if (!$scope.testCreationForm.$valid) {
+			alert("you have empty questions!!");
+		} else {
+			$http.post('url', $scope.formData)
+				.success(function(data) { // data consists of json data returned from server side
+					$scope.formData = {}; // clear the form so our user is ready to enter another
+					$scope.questions = data;
+					console.log(data);
+				})
+				.error(function(data) {
+					console.log('Error: ' + data);
+				});
+		}
     };
 
 });
