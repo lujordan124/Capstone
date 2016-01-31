@@ -42,52 +42,42 @@
 		</div>
 
 		<script type="text/javascript">
-		    var editor = ace.edit("editor");	
-		    editor.setTheme("ace/theme/twilight");
-		    editor.getSession().setMode("ace/mode/c");
-		    editor.getSession().on('change', function(e) {
-		    	var startRow = e["start"]["row"];
-		    	var startColumn = e["start"]["column"];
-		    	var endRow = e["end"]["row"];
-		    	var endColumn = e["end"]["column"];
-		    	var action = e["action"];
-		    	var lines = e["lines"];
+		//determine if copied text was inside or outside window
+		var copied = 0;
 
-		    	console.log(JSON.stringify(e));
+		//initialize editor
+	    var editor = ace.edit("editor");	
+	    editor.setTheme("ace/theme/twilight");
+	    editor.getSession().setMode("ace/mode/c");
+	    editor.getSession().on('change', function(e) {
+	    	var startRow = e["start"]["row"];
+	    	var startColumn = e["start"]["column"];
+	    	var endRow = e["end"]["row"];
+	    	var endColumn = e["end"]["column"];
+	    	var action = e["action"];
+	    	var lines = e["lines"];
 
-		    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
+	    	console.log(JSON.stringify(e));
 
-		    	// console.log(JSON.stringify(editor.commands));
+	    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-		    	editor.commands.on("exec", function(e) {
-		    		if (e.command && e.command.name == 'paste') {
-		    			e.preventDefault();
-		    		}
-		    	});
+	    	//detection of copy/paste. only allowing copy and paste from current window.
+	    	editor.commands.on("exec", function(e){
+	    		if (e.command) {
+	    			if(e.command.name == 'copy'){
+	    				copied = 1;
+	    			}
+	    			if(e.command.name == 'paste'){
+	    				if(copied == 0){
+	    					e.preventDefault();
+	    				}
+	    			}
+	    		}
+	    	});
+	    });
 
-		    	// alert(keystrokeLog);
-		    });
-
-		    $("#compile").on("click", function() {
-		    	var value = editor.getSession().getValue();
-		    });
-
-		    function finishTest(element) {
-		    	document.getElementById("bottom").style.visibility = "hidden";
-				document.getElementById("problem").style.visibility = "hidden";
-				document.getElementById('countdown').style.visibility = "hidden";
-		    	document.webkitExitFullscreen();
-				document.mozCancelFullscreen();
-				document.exitFullscreen();
-		    }
-
-		    //have an event listener on document
-		    //var bod = document.body;
-		    //bod.addEventListener()
-		</script>
-
-		<script>
-		document.ready(function(){
+	    //initialize all buttons
+		$(document).ready(function(){
 			//on start quiz
 			$('#startQuiz').click(function() {
 				$.ajax({
@@ -103,6 +93,7 @@
 			        }
 	    		});
 			});
+			//on submitting code
 			$('#submitCode').click(function() {
 				$.ajax({
 					type: "POST",
@@ -113,6 +104,7 @@
 			        }
 	    		})
 			});
+			//on compilation
 			$('#compile').click(function() {
 				$.ajax({
 					type: "POST",
@@ -125,74 +117,82 @@
 	    		})
 			});
 		});
-			
-		</script>
+		
+		//detection of alt-tabbing
+		$(window).focusin(function() {
+			alert("I'M BACK");
+		});
+		$(window).blur(function(){
+			alert("BLUR");
+			copied = 0;
+			// window.location.replace("offocus.php");
+		});
 
-		<script type ="text/javascript">
-			$(window).focusin(function() {
-				
-			});
-			$(window).blur(function(){
-				// window.location.replace("offocus.php");
-			});
-		</script>
+		//full-screen change
+		document.addEventListener("fullscreenchange", didChange);
+		document.addEventListener("webkitfullscreenchange", didChange);
+		document.addEventListener("mozfullscreenchange", didChange);
+		
+		//when test is finished
+		function finishTest(element) {
+	    	document.getElementById("bottom").style.visibility = "hidden";
+			document.getElementById("problem").style.visibility = "hidden";
+			document.getElementById('countdown').style.visibility = "hidden";
+	    	document.webkitExitFullscreen();
+			document.mozCancelFullscreen();
+			document.exitFullscreen();
+	    }
 
-
-		<script type="text/javascript"> 
-
-			document.addEventListener("fullscreenchange", didChange);
-			document.addEventListener("webkitfullscreenchange", didChange);
-			document.addEventListener("mozfullscreenchange", didChange);
-				
-			function didChange() {
-				// alert("ERROR!!!");
-				var height = $(document).height();
-				var sizeWin = window.innerWidth + " " + window.innerHeight;
-				// alert(sizeWin);
-				if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
-					// alert("EXITED TESTING MODE");
-				} else {
-					// alert("ENTERED TESTING MODE");
-				}
+	    //if fullscreen changed
+		function didChange() {
+			// alert("ERROR!!!");
+			var height = $(document).height();
+			var sizeWin = window.innerWidth + " " + window.innerHeight;
+			// alert(sizeWin);
+			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
+				alert("EXITED TESTING MODE");
+				copied = 0;
+			} else {
+				// alert("ENTERED TESTING MODE");
 			}
+		}
 
-			function requestFullScreen(element) {
-				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-				if (requestMethod) {
-					requestMethod.call(element);
+		//force full screen
+		function requestFullScreen(element) {
+			var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+			if (requestMethod) {
+				requestMethod.call(element);
 
-					//TIMER FUNCTIONS
-					var date = new Date().getTime();
-					var timerTime =  date + (45 * 60 * 1000);
+				//TIMER FUNCTIONS
+				var date = new Date().getTime();
+				var timerTime =  date + (45 * 60 * 1000);
 
-					setInterval(function() {
-						var counterDate = new Date().getTime()
-						var countdown = document.getElementById('countdown');
-						var secondsLeft = timerTime - counterDate;
+				setInterval(function() {
+					var counterDate = new Date().getTime()
+					var countdown = document.getElementById('countdown');
+					var secondsLeft = timerTime - counterDate;
 
-						var minutes = Math.floor(secondsLeft/60000);
-						var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-						
-						if (seconds > 10) {
-							countdown.innerHTML = '' + minutes + ':' + seconds;
-						} else {
-							countdown.innerHTML = '' + minutes + ':0' + seconds;
-						}
-					}, 1000);
-
-					document.getElementById("fullscreen").style.visibility = "hidden";
-					document.getElementById("bottom").style.visibility = "visible";
-					document.getElementById("problem").style.visibility = "visible";
-
-				} else if (typeof window.ActiveXObject !== "undefined") {
-					var wscript  = new ActiveXObject("WScript.Shell");
-					if (wscript != null) {
-						wscript.SendKeys("{F11}");
+					var minutes = Math.floor(secondsLeft/60000);
+					var seconds = ((secondsLeft%60000)/1000).toFixed(0);
+					
+					if (seconds > 10) {
+						countdown.innerHTML = '' + minutes + ':' + seconds;
+					} else {
+						countdown.innerHTML = '' + minutes + ':0' + seconds;
 					}
+				}, 1000);
+
+				document.getElementById("fullscreen").style.visibility = "hidden";
+				document.getElementById("bottom").style.visibility = "visible";
+				document.getElementById("problem").style.visibility = "visible";
+
+			} else if (typeof window.ActiveXObject !== "undefined") {
+				var wscript  = new ActiveXObject("WScript.Shell");
+				if (wscript != null) {
+					wscript.SendKeys("{F11}");
 				}
 			}
+		}
 		</script>
-
 	</body>
-
 </html>
