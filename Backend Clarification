@@ -75,3 +75,7 @@ CreateQuiz.php ==========================================================
 
 CheckLogin.php - Will finish after netbadge
 
+Compilation Return Info:
+* Compile message
+* Standard out
+* Standard error
