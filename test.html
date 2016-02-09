@@ -20,8 +20,18 @@
 	<body>
 		<center>
 			<div id = "problem" style="visibility:hidden">
-				<h1 id = "problemNum"> Problem #1: [NAME OF PROBLEM] </h1>
-				<div id = "description"> Description of problem here </div>
+				<div id = "problemhead">
+					<button type="button" class="btn btn-info" id = "previous">
+			     		<span class="glyphicon glyphicon-chevron-left"></span>
+			    	</button>
+					<div id = "problemNum">Problem #1: [NAME OF PROBLEM]</div>
+					<button type="button" class="btn btn-info" id = "next">
+				     	<span class="glyphicon glyphicon-chevron-right"></span>
+				    </button>
+				</div>
+				<div id = "description"> 
+					Description of problem here
+				</div>
 			</div>
 			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
 		</center>
@@ -37,11 +47,14 @@
 				<h2> The results of the test </h2>
 				<textarea id = "results">Hi</textarea>
 			</div>
-
 			<button class = "btn btn-default" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
 		</div>
 
 		<script type="text/javascript">
+		//for storing all the questions
+		var questions = ["this is question 1", "this is question 2", "this is quesiton 3"];
+		//for determining which question we are currently on
+		var qIndex = 0;
 		//determine if copied text was inside or outside window
 		var copied = 0;
 
@@ -116,14 +129,30 @@
 			        }
 	    		})
 			});
+			$('#previous').click(function() {
+				//on previous click, replace title with question
+				qIndex--;
+				loadButtons();
+				document.getElementById('problemNum').innerHTML = questions[qIndex];
+			});
+			$('#next').click(function() {
+				//on previous click, replace title with question
+				qIndex++;
+				loadButtons();
+				document.getElementById('problemNum').innerHTML = questions[qIndex];
+			});
 		});
+
+		//hide previous button on first question
+		
 		
 		//detection of alt-tabbing
 		$(window).focusin(function() {
-			alert("I'M BACK");
+			//alert("I'M BACK");
 		});
 		$(window).blur(function(){
-			alert("BLUR");
+			//ALERT THAT IT BLURRED
+			//alert("BLUR");
 			copied = 0;
 			// window.location.replace("offocus.php");
 		});
@@ -136,7 +165,7 @@
 		//when test is finished
 		function finishTest(element) {
 	    	document.getElementById("bottom").style.visibility = "hidden";
-			document.getElementById("problem").style.visibility = "hidden";
+			document.getElementById("problem").text = "hidden";
 			document.getElementById('countdown').style.visibility = "hidden";
 	    	document.webkitExitFullscreen();
 			document.mozCancelFullscreen();
@@ -150,15 +179,32 @@
 			var sizeWin = window.innerWidth + " " + window.innerHeight;
 			// alert(sizeWin);
 			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
-				alert("EXITED TESTING MODE");
+				//RECORD EXITING TESTING MODE
+				//alert("EXITED TESTING MODE");
 				copied = 0;
 			} else {
-				// alert("ENTERED TESTING MODE");
+				//alert("ENTERED TESTING MODE");
+			}
+		}
+		function loadButtons() {
+			//next and previous buttons
+			if(qIndex <= 0){
+				document.getElementById('previous').style.visibility = 'hidden';
+			} else {
+				document.getElementById('previous').style.visibility = 'visible';
+			}
+			//hide next button on last question
+			if(qIndex == questions.length-1 || qIndex == -1){
+				document.getElementById('next').style.visibility = 'hidden';
+			} else {
+				document.getElementById('next').style.visibility = 'visible';
 			}
 		}
 
 		//force full screen
 		function requestFullScreen(element) {
+			loadButtons(); 
+
 			var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 			if (requestMethod) {
 				requestMethod.call(element);
