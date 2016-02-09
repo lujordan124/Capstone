@@ -52,7 +52,9 @@
 
 		<script type="text/javascript">
 		//for storing all the questions
-		var questions = ["this is question 1", "this is question 2", "this is quesiton 3"];
+
+		var questions = [];
+		var timeAllowed = 0; 
 		//for determining which question we are currently on
 		var qIndex = 0;
 		//determine if copied text was inside or outside window
@@ -91,26 +93,12 @@
 
 	    //initialize all buttons
 		$(document).ready(function(){
-			//on start quiz
-			$('#startQuiz').click(function() {
-				$.ajax({
-			        type: "POST",
-			        url: "getQuiz.php",
-			        data: {quizNum: quizNum},
-			        success: function(data){
-			        	//retrieve quiz from database in JSON format
-			        	document.getElementById("quizName").innerHTML = data.quizName;
-			        	document.getElementById("questionName").innerHTML = data.questionName;
-			        	document.getElementById("description").innerHTML = data.description;
-			        	var timeAllowed = data.timeAllowed;
-			        }
-	    		});
-			});
 			//on submitting code
 			$('#submitCode').click(function() {
 				$.ajax({
 					type: "POST",
 			        url: "sendCode.php",
+			        //Requires more data, get from READ ME
 			        data: {code: code},
 			        success: function(data){
 			        	alert("DONE??");
@@ -122,6 +110,7 @@
 				$.ajax({
 					type: "POST",
 			        url: "compileCode.php",
+			        //Requires more data, get from READ ME
 			        data: {code: code},
 			        success: function(data){
 			        	document.getElementById("result").innerHTML = data;
@@ -133,13 +122,15 @@
 				//on previous click, replace title with question
 				qIndex--;
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = questions[qIndex];
+				document.getElementById('problemNum').innerHTML = qIndex + 1;
+	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 			$('#next').click(function() {
 				//on previous click, replace title with question
 				qIndex++;
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = questions[qIndex];
+				document.getElementById('problemNum').innerHTML = qIndex + 1;
+	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 		});
 
@@ -201,9 +192,34 @@
 			}
 		}
 
+		function getQuestions() {
+			var quizID = "TEST0001";
+
+			$.ajax({
+		        type: "POST",
+		        url: "getQuestions.php",
+		        data: {quizID: quizID},
+		        success: function(data){
+		        	//retrieve quiz from database in JSON format
+		        	document.getElementById("quizName").innerHTML = data.quizName;
+		        	document.getElementById("description").innerHTML = data.questionDescription[0];
+		        	if (data.success) {
+			        	var i;
+			        	for (i = 0; i < data.question.length; i++) {
+			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
+			        	}
+
+			        	timeAllowed = data.timeAllowed;
+			        	var quizName = data.quizName;
+			        }
+		        }
+    		});
+		}
+
 		//force full screen
 		function requestFullScreen(element) {
-			loadButtons(); 
+			loadButtons();
+			getQuestions();
 
 			var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 			if (requestMethod) {
