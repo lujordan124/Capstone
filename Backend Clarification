@@ -1,0 +1,77 @@
+READ ME
+
+GetQuestions.php ===========================================================
+
+	SESSION:
+		<string> 	studentID
+
+	INPUT:
+		<string> 	quizID
+
+	OUTPUT:
+		[JSON OBJECT] quiz
+    		<list> 		question
+    		<list> 		numSubmission
+    		<int> 		timeAllowed
+    		<string> 	quizName
+    		<bool> 		success; see if it is successful or not
+    		<string> 	message; message about it's return to see what went wrong
+
+	SUMMARY:
+		given quizID, returns the questions and details. 				[o]
+			Checks if student is logged in								        [x]
+			Checks if student is in class or not           				[x]
+			Checks if student can take the quiz (again).				  [x]
+			Checks if student should receive additional time 			[x]
+
+Submit.php ===============================================================
+
+	SESSION:
+		<string> 	studentID
+	
+	INPUT: 
+		<string> 	quizID
+		<int> 		questionNumber
+		<string>	submission; code
+		<bool>		grade; is this for a grade or for testing purposes
+
+	OUTPUT:
+		[JSON OBJECT] output
+		 	  <string>  compilationMessages
+		 	  <string>  stdoutMessages
+		 	  <string>  stderrMessages
+		 	  <string>  result
+
+	SUMMARY:
+		given quizID and the questionNumber and compile and run [o]
+		  Save to database                                      [o]
+			Checks if student has exceeded number of submission 	[x]
+			Checks if student has gone overtime							      [x]
+			Returns how many passed if graded							        [x]
+			Returns everything is submit for testing.					    [x]
+
+CreateQuiz.php ==========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+	INPUT:
+		<string> 	quizID
+		<string> 	classID
+		<string>	quizName
+		<string> 	timeAllowed
+		<list>		numSubmission
+		<list>		question
+		<list>		answer
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+
+  SUMMARY:
+    makes the quiz                                        [o]
+
+
+CheckLogin.php - Will finish after netbadge
+
