@@ -199,10 +199,11 @@
 		        type: "POST",
 		        url: "getQuestions.php",
 		        data: {quizID: quizID},
+		        dataType: "JSON",
 		        success: function(data){
 		        	//retrieve quiz from database in JSON format
-		        	document.getElementById("quizName").innerHTML = data.quizName;
-		        	document.getElementById("description").innerHTML = data.questionDescription[0];
+		        	//document.getElementById("quizName").innerHTML = data.quizName;
+		        	document.getElementById("description").innerHTML = data.question[0];
 		        	if (data.success) {
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
