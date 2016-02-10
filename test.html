@@ -97,19 +97,22 @@
 		$(document).ready(function(){
 			//on submitting code
 			$('#submitCode').click(function() {
-				$.ajax({
-					type: "POST",
-			        url: "sendCode.php",
-			        //Requires more data, get from READ ME
-			        data: {
-			        	quizID: quizID,
-			        	questionNumber: (qIndex + 1),
-			        	submission: editor.getValue(),
-			        	grade: 1 },
-			        success: function(data){
-			        	alert("DONE??");
-			        }
-	    		})
+				if (confirm("Are you sure you want to want to submit the quiz? You will not be able to make changes once you have submitted the assignment.")) {
+					$.ajax({
+						type: "POST",
+				        url: "sendCode.php",
+				        //Requires more data, get from READ ME
+				        data: {
+				        	quizID: quizID,
+				        	questionNumber: (qIndex + 1),
+				        	submission: editor.getValue(),
+				        	grade: 1 },
+				        success: function(data){
+				        	alert("DONE??");
+				        	//CHANGE SCREENS here
+				        }
+		    		})
+				}
 			});
 			//on compilation
 			$('#compile').click(function() {
