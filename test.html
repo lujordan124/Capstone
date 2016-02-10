@@ -123,7 +123,7 @@
 			        	submission: editor.getValue(),
 			        	grade: 0 },
 			        success: function(data){
-			        	document.getElementById("result").innerHTML = data;
+			        	document.getElementById("result").innerHTML = COMPILATIONERROR + STANDARDERROR + STANDARDOUT;
 			        	alert("THE RESULTS OF THE COMPILATION?");
 			        }
 	    		})
