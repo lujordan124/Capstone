@@ -99,7 +99,11 @@
 					type: "POST",
 			        url: "sendCode.php",
 			        //Requires more data, get from READ ME
-			        data: {code: code},
+			        data: {
+			        	quizID: quizID,
+			        	questionNumber: (qIndex + 1),
+			        	submission: editor.getValue(),
+			        	grade: 1 },
 			        success: function(data){
 			        	alert("DONE??");
 			        }
@@ -111,7 +115,11 @@
 					type: "POST",
 			        url: "compileCode.php",
 			        //Requires more data, get from READ ME
-			        data: {code: code},
+			        data: {
+			        	quizID: quizID, 
+			        	questionNumber: (qIndex + 1), 
+			        	submission: editor.getValue(),
+			        	grade: 0 },
 			        success: function(data){
 			        	document.getElementById("result").innerHTML = data;
 			        	alert("THE RESULTS OF THE COMPILATION?");
@@ -192,9 +200,7 @@
 			}
 		}
 
-		function getQuestions() {
-			var quizID = "TEST0001";
-
+		bool function getQuestions() {
 			$.ajax({
 		        type: "POST",
 		        url: "getQuestions.php",
@@ -203,8 +209,8 @@
 		        success: function(data){
 		        	//retrieve quiz from database in JSON format
 		        	//document.getElementById("quizName").innerHTML = data.quizName;
-		        	document.getElementById("description").innerHTML = data.question[0];
 		        	if (data.success) {
+		        		document.getElementById("description").innerHTML = data.question[0];
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
 			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
@@ -212,6 +218,9 @@
 
 			        	timeAllowed = data.timeAllowed;
 			        	var quizName = data.quizName;
+			        	return 1;
+			        } else {
+			        	return 0;
 			        }
 		        }
     		});
@@ -219,41 +228,45 @@
 
 		//force full screen
 		function requestFullScreen(element) {
-			loadButtons();
-			getQuestions();
+			if (getQuestions() == 1) {
+				loadButtons();
 
-			var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-			if (requestMethod) {
-				requestMethod.call(element);
+				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+				if (requestMethod) {
+					requestMethod.call(element);
 
-				//TIMER FUNCTIONS
-				var date = new Date().getTime();
-				var timerTime =  date + (45 * 60 * 1000);
+					//TIMER FUNCTIONS
+					var date = new Date().getTime();
+					var timerTime =  date + (timeAllowed * 60 * 1000);
 
-				setInterval(function() {
-					var counterDate = new Date().getTime()
-					var countdown = document.getElementById('countdown');
-					var secondsLeft = timerTime - counterDate;
+					setInterval(function() {
+						var counterDate = new Date().getTime()
+						var countdown = document.getElementById('countdown');
+						var secondsLeft = timerTime - counterDate;
 
-					var minutes = Math.floor(secondsLeft/60000);
-					var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-					
-					if (seconds > 10) {
-						countdown.innerHTML = '' + minutes + ':' + seconds;
-					} else {
-						countdown.innerHTML = '' + minutes + ':0' + seconds;
+						var minutes = Math.floor(secondsLeft/60000);
+						var seconds = ((secondsLeft%60000)/1000).toFixed(0);
+						
+						if (seconds > 10) {
+							countdown.innerHTML = '' + minutes + ':' + seconds;
+						} else {
+							countdown.innerHTML = '' + minutes + ':0' + seconds;
+						}
+					}, 1000);
+
+					document.getElementById("fullscreen").style.visibility = "hidden";
+					document.getElementById("quizIDDiv").style.visibility = "hidden";
+					document.getElementById("bottom").style.visibility = "visible";
+					document.getElementById("problem").style.visibility = "visible";
+
+				} else if (typeof window.ActiveXObject !== "undefined") {
+					var wscript  = new ActiveXObject("WScript.Shell");
+					if (wscript != null) {
+						wscript.SendKeys("{F11}");
 					}
-				}, 1000);
-
-				document.getElementById("fullscreen").style.visibility = "hidden";
-				document.getElementById("bottom").style.visibility = "visible";
-				document.getElementById("problem").style.visibility = "visible";
-
-			} else if (typeof window.ActiveXObject !== "undefined") {
-				var wscript  = new ActiveXObject("WScript.Shell");
-				if (wscript != null) {
-					wscript.SendKeys("{F11}");
 				}
+			else {
+				alert("Entered the wrong quiz ID");
 			}
 		}
 		</script>
