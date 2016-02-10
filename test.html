@@ -33,6 +33,7 @@
 					Description of problem here
 				</div>
 			</div>
+			<div id = "quizIDDiv"><h2>Quiz Id:</h2><input type = "text" id = "quizIDInput"></input></div><br>
 			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
 		</center>
 		<div id="countdown" style="visibility:hidden">
@@ -55,6 +56,7 @@
 
 		var questions = [];
 		var timeAllowed = 0; 
+		var quizID;
 		//for determining which question we are currently on
 		var qIndex = 0;
 		//determine if copied text was inside or outside window
@@ -219,6 +221,8 @@
 
 		//force full screen
 		function requestFullScreen(element) {
+			quizID = document.getElementById("quizIDInput").value;
+			alert(quizID); 
 			loadButtons();
 			getQuestions();
 
