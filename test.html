@@ -20,9 +20,20 @@
 	<body>
 		<center>
 			<div id = "problem" style="visibility:hidden">
-				<h1 id = "problemNum"> Problem #1: [NAME OF PROBLEM] </h1>
-				<div id = "description"> Description of problem here </div>
+				<div id = "problemhead">
+					<button type="button" class="btn btn-info" id = "previous">
+			     		<span class="glyphicon glyphicon-chevron-left"></span>
+			    	</button>
+					<div id = "problemNum">Problem #1: [NAME OF PROBLEM]</div>
+					<button type="button" class="btn btn-info" id = "next">
+				     	<span class="glyphicon glyphicon-chevron-right"></span>
+				    </button>
+				</div>
+				<div id = "description"> 
+					Description of problem here
+				</div>
 			</div>
+			<div id = "quizIDDiv"><h2>Quiz Id:</h2><input type = "text" id = "quizIDInput"></input></div><br>
 			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
 		</center>
 		<div id="countdown" style="visibility:hidden">
@@ -37,133 +48,203 @@
 				<h2> The results of the test </h2>
 				<textarea id = "results">Hi</textarea>
 			</div>
-
 			<button class = "btn btn-default" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
 		</div>
 
 		<script type="text/javascript">
-		    var editor = ace.edit("editor");	
-		    editor.setTheme("ace/theme/twilight");
-		    editor.getSession().setMode("ace/mode/c");
-		    editor.getSession().on('change', function(e) {
-		    	var startRow = e["start"]["row"];
-		    	var startColumn = e["start"]["column"];
-		    	var endRow = e["end"]["row"];
-		    	var endColumn = e["end"]["column"];
-		    	var action = e["action"];
-		    	var lines = e["lines"];
+		//for storing all the questions
 
-		    	console.log(JSON.stringify(e));
+		var questions = [];
+		var timeAllowed = 0; 
+		var quizID;
+		//for determining which question we are currently on
+		var qIndex = 0;
+		//determine if copied text was inside or outside window
+		var copied = 0;
 
-		    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
+		//initialize editor
+	    var editor = ace.edit("editor");	
+	    editor.setTheme("ace/theme/twilight");
+	    editor.getSession().setMode("ace/mode/c");
+	    editor.getSession().on('change', function(e) {
+	    	var startRow = e["start"]["row"];
+	    	var startColumn = e["start"]["column"];
+	    	var endRow = e["end"]["row"];
+	    	var endColumn = e["end"]["column"];
+	    	var action = e["action"];
+	    	var lines = e["lines"];
 
-		    	// console.log(JSON.stringify(editor.commands));
+	    	console.log(JSON.stringify(e));
 
-		    	editor.commands.on("exec", function(e) {
-		    		if (e.command && e.command.name == 'paste') {
-		    			e.preventDefault();
-		    		}
-		    	});
+	    	var keystrokeLog = "Start Row: " + startRow + " Start Column: " + startColumn + " End Row: " + endRow + " End Column: " + endColumn + " Action: " + action + " Lines: " + lines;
 
-		    	// alert(keystrokeLog);
-		    });
+	    	//detection of copy/paste. only allowing copy and paste from current window.
+	    	editor.commands.on("exec", function(e){
+	    		if (e.command) {
+	    			if(e.command.name == 'copy'){
+	    				copied = 1;
+	    			}
+	    			if(e.command.name == 'paste'){
+	    				if(copied == 0){
+	    					e.preventDefault();
+	    				}
+	    			}
+	    		}
+	    	});
+	    });
 
-		    $("#compile").on("click", function() {
-		    	var value = editor.getSession().getValue();
-		    });
-
-		    function finishTest(element) {
-		    	document.getElementById("bottom").style.visibility = "hidden";
-				document.getElementById("problem").style.visibility = "hidden";
-				document.getElementById('countdown').style.visibility = "hidden";
-		    	document.webkitExitFullscreen();
-				document.mozCancelFullscreen();
-				document.exitFullscreen();
-		    }
-
-		    //have an event listener on document
-		    //var bod = document.body;
-		    //bod.addEventListener()
-		</script>
-
-		<script>
-		document.ready(function(){
-			//on start quiz
-			$('#startQuiz').click(function() {
-				$.ajax({
-			        type: "POST",
-			        url: "getQuiz.php",
-			        data: {quizNum: quizNum},
-			        success: function(data){
-			        	//retrieve quiz from database in JSON format
-			        	document.getElementById("quizName").innerHTML = data.quizName;
-			        	document.getElementById("questionName").innerHTML = data.questionName;
-			        	document.getElementById("description").innerHTML = data.description;
-			        	var timeAllowed = data.timeAllowed;
-			        }
-	    		});
-			});
+	    //initialize all buttons
+		$(document).ready(function(){
+			//on submitting code
 			$('#submitCode').click(function() {
-				$.ajax({
-					type: "POST",
-			        url: "sendCode.php",
-			        data: {code: code},
-			        success: function(data){
-			        	alert("DONE??");
-			        }
-	    		})
+				if (confirm("Are you sure you want to want to submit the quiz? You will not be able to make changes once you have submitted the assignment.")) {
+					$.ajax({
+						type: "POST",
+				        url: "sendCode.php",
+				        //Requires more data, get from READ ME
+				        data: {
+				        	quizID: quizID,
+				        	questionNumber: (qIndex + 1),
+				        	submission: editor.getValue(),
+				        	grade: 1 },
+				        success: function(data){
+				        	alert("DONE??");
+				        	//CHANGE SCREENS here
+				        }
+		    		})
+				}
 			});
+			//on compilation
 			$('#compile').click(function() {
 				$.ajax({
 					type: "POST",
 			        url: "compileCode.php",
-			        data: {code: code},
+			        //Requires more data, get from READ ME
+			        data: {
+			        	quizID: quizID, 
+			        	questionNumber: (qIndex + 1), 
+			        	submission: editor.getValue(),
+			        	grade: 0 },
 			        success: function(data){
-			        	document.getElementById("result").innerHTML = data;
+			        	document.getElementById("result").innerHTML = COMPILATIONERROR + STANDARDERROR + STANDARDOUT;
 			        	alert("THE RESULTS OF THE COMPILATION?");
 			        }
 	    		})
 			});
+			$('#previous').click(function() {
+				//on previous click, replace title with question
+				qIndex--;
+				loadButtons();
+				document.getElementById('problemNum').innerHTML = qIndex + 1;
+	        	document.getElementById("description").innerHTML = question[qIndex].description;
+			});
+			$('#next').click(function() {
+				//on previous click, replace title with question
+				qIndex++;
+				loadButtons();
+				document.getElementById('problemNum').innerHTML = qIndex + 1;
+	        	document.getElementById("description").innerHTML = question[qIndex].description;
+			});
 		});
-			
-		</script>
 
-		<script type ="text/javascript">
-			$(window).focusin(function() {
-				
-			});
-			$(window).blur(function(){
-				// window.location.replace("offocus.php");
-			});
-		</script>
+		//hide previous button on first question
+		
+		
+		//detection of alt-tabbing
+		$(window).focusin(function() {
+			//alert("I'M BACK");
+		});
+		$(window).blur(function(){
+			//ALERT THAT IT BLURRED
+			//alert("BLUR");
+			copied = 0;
+			// window.location.replace("offocus.php");
+		});
 
+		//full-screen change
+		document.addEventListener("fullscreenchange", didChange);
+		document.addEventListener("webkitfullscreenchange", didChange);
+		document.addEventListener("mozfullscreenchange", didChange);
+		
+		//when test is finished
+		function finishTest(element) {
+	    	document.getElementById("bottom").style.visibility = "hidden";
+			document.getElementById("problem").text = "hidden";
+			document.getElementById('countdown').style.visibility = "hidden";
+	    	document.webkitExitFullscreen();
+			document.mozCancelFullscreen();
+			document.exitFullscreen();
+	    }
 
-		<script type="text/javascript"> 
-
-			document.addEventListener("fullscreenchange", didChange);
-			document.addEventListener("webkitfullscreenchange", didChange);
-			document.addEventListener("mozfullscreenchange", didChange);
-				
-			function didChange() {
-				// alert("ERROR!!!");
-				var height = $(document).height();
-				var sizeWin = window.innerWidth + " " + window.innerHeight;
-				// alert(sizeWin);
-				if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
-					// alert("EXITED TESTING MODE");
-				} else {
-					// alert("ENTERED TESTING MODE");
-				}
+	    //if fullscreen changed
+		function didChange() {
+			// alert("ERROR!!!");
+			var height = $(document).height();
+			var sizeWin = window.innerWidth + " " + window.innerHeight;
+			// alert(sizeWin);
+			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
+				//RECORD EXITING TESTING MODE
+				//alert("EXITED TESTING MODE");
+				copied = 0;
+			} else {
+				//alert("ENTERED TESTING MODE");
 			}
+		}
+		function loadButtons() {
+			//next and previous buttons
+			if(qIndex <= 0){
+				document.getElementById('previous').style.visibility = 'hidden';
+			} else {
+				document.getElementById('previous').style.visibility = 'visible';
+			}
+			//hide next button on last question
+			if(qIndex == questions.length-1 || qIndex == -1){
+				document.getElementById('next').style.visibility = 'hidden';
+			} else {
+				document.getElementById('next').style.visibility = 'visible';
+			}
+		}
 
-			function requestFullScreen(element) {
+		bool function getQuestions() {
+			$.ajax({
+		        type: "POST",
+		        url: "getQuestions.php",
+		        data: {quizID: quizID},
+		        dataType: "JSON",
+		        success: function(data){
+		        	//retrieve quiz from database in JSON format
+		        	//document.getElementById("quizName").innerHTML = data.quizName;
+		        	if (data.success) {
+		        		document.getElementById("description").innerHTML = data.question[0];
+			        	var i;
+			        	for (i = 0; i < data.question.length; i++) {
+			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
+			        	}
+
+			        	timeAllowed = data.timeAllowed;
+			        	var quizName = data.quizName;
+			        	return 1;
+			        } else {
+			        	return 0;
+			        }
+		        }
+    		});
+		}
+
+		//force full screen
+		function requestFullScreen(element) {
+			quizID = document.getElementById("quizIDInput").value;
+
+			if (getQuestions() == 1) {
+				loadButtons();
+
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 				if (requestMethod) {
 					requestMethod.call(element);
 
 					//TIMER FUNCTIONS
 					var date = new Date().getTime();
-					var timerTime =  date + (45 * 60 * 1000);
+					var timerTime =  date + (timeAllowed * 60 * 1000);
 
 					setInterval(function() {
 						var counterDate = new Date().getTime()
@@ -181,6 +262,7 @@
 					}, 1000);
 
 					document.getElementById("fullscreen").style.visibility = "hidden";
+					document.getElementById("quizIDDiv").style.visibility = "hidden";
 					document.getElementById("bottom").style.visibility = "visible";
 					document.getElementById("problem").style.visibility = "visible";
 
@@ -190,9 +272,10 @@
 						wscript.SendKeys("{F11}");
 					}
 				}
+			else {
+				alert("Entered the wrong quiz ID");
 			}
+		}
 		</script>
-
 	</body>
-
 </html>

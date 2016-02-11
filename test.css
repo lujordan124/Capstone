@@ -13,11 +13,45 @@ h2 {
 	color: #ccc;
 	margin: 5px;
 }
+#quizIDForm {
+	color: #ccc;
+	font-size: 20px;
+}
+#problemhead{
+	margin: 2px;
+	font-size: 40px;
+	color: #ddd;
+    white-space: nowrap;
+    display:inline-block;
+}
+#problemNum{
+	display: inline;
+}
 
 #left, #right {
  width: 40%;
  margin: 45px;
  float: left;
+}
+.btn-info {
+	background-color: #555;
+	padding: 6px;
+	border: none;
+	-webkit-transition: background-color ease-out 1s;
+    -moz-transition: background-color ease-out 1s;
+    -o-transition: background-color ease-out 1s;
+    transition: background-color ease-out 1s;
+}
+
+.btn-info:hover {
+	background-color: #ccc;
+	-webkit-transition: background-color ease-out 1s;
+    -moz-transition: background-color ease-out 1s;
+    -o-transition: background-color ease-out 1s;
+    transition: background-color ease-out 1s;
+}
+.btn-info:active{
+	background-color: #ccc;
 }
 
 #compile {
@@ -39,7 +73,7 @@ h2 {
 #finish {
 	position:absolute;
 	right:10%;
-	bottom:8%;
+	bottom:6%;
 }
 
 #editor { 
