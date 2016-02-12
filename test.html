@@ -126,7 +126,7 @@
 			        	submission: editor.getValue(),
 			        	grade: 0 },
 			        success: function(data){
-			        	document.getElementById("result").innerHTML = COMPILATIONERROR + STANDARDERROR + STANDARDOUT;
+			        	document.getElementById("result").innerHTML = data.compile_message + "\n" data.standard_out + "\n" +data.standard_error;
 			        	alert("THE RESULTS OF THE COMPILATION?");
 			        }
 	    		})
