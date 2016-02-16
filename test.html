@@ -18,38 +18,44 @@
 		<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
+		<div id="test">
+			<center>
+				<div id = "problem" style="display:none">
+					<div id = "problemhead">
+						<button type="button" class="btn btn-info" id = "previous">
+				     		<span class="glyphicon glyphicon-chevron-left"></span>
+				    	</button>
+						<div id = "problemNum">Problem #1: [NAME OF PROBLEM]</div>
+						<button type="button" class="btn btn-info" id = "next">
+					     	<span class="glyphicon glyphicon-chevron-right"></span>
+					    </button>
+					</div>
+					<div id = "description"> 
+						Description of problem here
+					</div>
+				</div>
+				<div id = "quizIDDiv"><h2>Quiz Id:</h2><input type = "text" id = "quizIDInput"></input></div><br>
+				<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
+			</center>
+			<div id="countdown" style="display:none">
+			</div>
+			<div id = "bottom" style="display:none">
+				<div id = "left">
+					<h2 class = "pull-left"> Code here</h2>
+					<button class="btn btn-default pull-right" id = "compile">SUBMIT</button>
+					<pre id="editor"></pre><br>
+				</div>
+				<div id = "right">
+					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
+					<h2 class = "pull-left"> The results of the test </h2>
+					<textarea id = "results">Hi</textarea>
+				</div>
+			</div>
+		</div>
 		<center>
-			<div id = "problem" style="display:none">
-				<div id = "problemhead">
-					<button type="button" class="btn btn-info" id = "previous">
-			     		<span class="glyphicon glyphicon-chevron-left"></span>
-			    	</button>
-					<div id = "problemNum">Problem #1: [NAME OF PROBLEM]</div>
-					<button type="button" class="btn btn-info" id = "next">
-				     	<span class="glyphicon glyphicon-chevron-right"></span>
-				    </button>
-				</div>
-				<div id = "description"> 
-					Description of problem here
-				</div>
-			</div>
-			<div id = "quizIDDiv"><h2>Quiz Id:</h2><input type = "text" id = "quizIDInput"></input></div><br>
-			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
+			<button id = "resumeTesting" class="btn btn-default" style = "display:none" onclick="requestFullScreen(document.body)">RESUME TEST</button>
 		</center>
-		<div id="countdown" style="display:none">
-		</div>
-		<div id = "bottom" style="display:none">
-			<div id = "left">
-				<h2 class = "pull-left"> Code here</h2>
-				<button class="btn btn-default pull-right" id = "compile">SUBMIT</button>
-				<pre id="editor"></pre><br>
-			</div>
-			<div id = "right">
-				<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
-				<h2 class = "pull-left"> The results of the test </h2>
-				<textarea id = "results">Hi</textarea>
-			</div>
-		</div>
+
 
 		<script type="text/javascript">
 		//for storing all the questions
@@ -63,7 +69,7 @@
 		var copied = 0;
 
 		//initialize editor
-	    var editor = ace.edit("editor");	
+	    var editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/twilight");
 	    editor.getSession().setMode("ace/mode/c");
 	    editor.getSession().on('change', function(e) {
@@ -185,8 +191,11 @@
 			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
 				//RECORD EXITING TESTING MODE
 				//alert("EXITED TESTING MODE");
+				document.getElementById("test").style.display = "none";
+				document.getElementById("resumeTesting").style.display = "block";
 				copied = 0;
 			} else {
+				document.getElementById("test").style.display = "block";
 				//alert("ENTERED TESTING MODE");
 			}
 		}
@@ -237,6 +246,7 @@
 			quizID = document.getElementById("quizIDInput").value;
 
 			//if (getQuestions() == 1) {
+				loadButtons();
 
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 				if (requestMethod) {
