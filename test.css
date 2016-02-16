@@ -33,10 +33,12 @@ h2 {
  margin: 45px;
  float: left;
 }
+
 .btn-info {
 	background-color: #555;
 	padding: 6px;
 	border: none;
+	display: inline-block;
 	-webkit-transition: background-color ease-out 1s;
     -moz-transition: background-color ease-out 1s;
     -o-transition: background-color ease-out 1s;
@@ -57,6 +59,7 @@ h2 {
 #compile {
 	padding: 3px;
 }
+
 #results {
 	width: 550px;
 	height: 450px;
@@ -64,10 +67,11 @@ h2 {
 	padding: 5px;
 	font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 }
+
 #description {
 	font-size: 20px;
 	color: #ccc;
-	margin: 2px;
+	margin: 0px;
 }
 
 #finish {

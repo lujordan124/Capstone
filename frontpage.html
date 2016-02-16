@@ -14,43 +14,19 @@
 
 		<!-- Latest compiled JavaScript -->
 		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<link href='https://fonts.googleapis.com/czs?family=Open+Sans' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 		<link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
-		<center class = "center">
-			<div id = "problem" style="visibility:hidden">
-				<div id = "problemhead">
-					<button type="button" class="btn btn-info" id = "previous">
-			     		<span class="glyphicon glyphicon-chevron-left"></span>
-			    	</button>
-					<div id = "problemNum">Problem #1: [NAME OF PROBLEM]</div>
-					<button type="button" class="btn btn-info" id = "next">
-				     	<span class="glyphicon glyphicon-chevron-right"></span>
-				    </button>
-				</div>
-				<div id = "description"> 
-					Description of problem here
-				</div>
-			</div>
-			<div id = "quizIDDiv"><h2>Quiz Id:</h2><input type = "text" id = "quizIDInput"></input></div><br>
-			<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
+		<center>
+			<div id = "quizIDDiv">
+				<h2>Quiz Id:</h2>
+				<input type = "text" id = "quizIDInput"></input>
+			</div><br>
+			<form id = "quiz">
+				<button id = "fullscreen" class="btn btn-default" onclick="requestFullScreen(document.body)">START TEST</button>
+			</form>
 		</center>
-		<div id="countdown" style="visibility:hidden">
-		</div>
-		<div id = "bottom" style="visibility:hidden">
-			<div id = "left">
-				<h2 class = "pull-left"> Code here</h2>
-				<button class="btn btn-default pull-right" id = "compile">SUBMIT</button>
-				<pre id="editor"></pre><br>
-			</div>
-			<div id = "right">
-				<h2> The results of the test </h2>
-				<textarea id = "results">Hi</textarea>
-			</div>
-			<button class = "btn btn-default" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
-		</div>
-
 		<script type="text/javascript">
 		//for storing all the questions
 
@@ -126,7 +102,7 @@
 			        	submission: editor.getValue(),
 			        	grade: 0 },
 			        success: function(data){
-			        	document.getElementById("result").innerHTML = data.compile_message + "\n" + data.standard_out + "\n" +data.standard_error;
+			        	document.getElementById("result").innerHTML = data.compile_message + "\n" data.standard_out + "\n" +data.standard_error;
 			        	alert("THE RESULTS OF THE COMPILATION?");
 			        }
 	    		})
@@ -205,7 +181,7 @@
 			}
 		}
 
-		function getQuestions() {
+		bool function getQuestions() {
 			$.ajax({
 		        type: "POST",
 		        url: "getQuestions.php",
@@ -235,7 +211,7 @@
 		function requestFullScreen(element) {
 			quizID = document.getElementById("quizIDInput").value;
 
-			//if (getQuestions() == 1) {
+			if (getQuestions() == 1) {
 				loadButtons();
 
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
@@ -275,7 +251,6 @@
 			else {
 				alert("Entered the wrong quiz ID");
 			}
-		//}
 		}
 		</script>
 	</body>
