@@ -17,6 +17,7 @@ h2 {
 	color: #ccc;
 	font-size: 20px;
 }
+
 #problemhead{
 	margin: 2px;
 	font-size: 40px;
@@ -24,6 +25,13 @@ h2 {
     white-space: nowrap;
     display:inline-block;
 }
+
+#description {
+	font-size: 20px;
+	color: #ccc;
+	margin: 2px;
+}
+
 #problemNum{
 	display: inline;
 }
@@ -52,6 +60,7 @@ h2 {
     -o-transition: background-color ease-out 1s;
     transition: background-color ease-out 1s;
 }
+
 .btn-info:active{
 	background-color: #ccc;
 }
@@ -67,6 +76,7 @@ h2 {
 	padding: 5px;
 	font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 }
+<<<<<<< HEAD
 
 #description {
 	font-size: 20px;
@@ -78,15 +88,21 @@ h2 {
 	position:absolute;
 	right:10%;
 	bottom:6%;
+	padding: 3px;
 }
 
 #editor { 
    	float: left;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     width: 550px;
     height: 450px;
     font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+}
+
+#countdown {
+	top: 0px;
+	bottom: 0px;
+}
+
+#bottom {
+	top: 0px;
 }
