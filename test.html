@@ -162,6 +162,7 @@
 		});
 		$(window).blur(function(){
 			//ALERT THAT IT BLURRED
+			pauseTest();
 			//alert("BLUR");
 			copied = 0;
 			// window.location.replace("offocus.php");
@@ -191,14 +192,22 @@
 			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
 				//RECORD EXITING TESTING MODE
 				//alert("EXITED TESTING MODE");
-				document.getElementById("test").style.display = "none";
-				document.getElementById("resumeTesting").style.display = "block";
+				pauseTest();
 				copied = 0;
 			} else {
-				document.getElementById("test").style.display = "block";
 				//alert("ENTERED TESTING MODE");
 			}
 		}
+
+	    function pauseTest() {
+	    	document.getElementById("test").style.display = "none";
+			document.getElementById("resumeTesting").style.display = "block";
+	    }
+
+	    function resumeTest() {
+	    	document.getElementById("test").style.display = "block";
+			document.getElementById("resumeTesting").style.display = "none";
+	    }
 
 		function loadButtons() {
 			//next and previous buttons
@@ -244,6 +253,7 @@
 		//force full screen
 		function requestFullScreen(element) {
 			quizID = document.getElementById("quizIDInput").value;
+			resumeTest();
 
 			//if (getQuestions() == 1) {
 				loadButtons();
