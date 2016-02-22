@@ -61,6 +61,10 @@
 		//for storing all the questions
 
 		var questions = [];
+		
+		var currentCode = [];
+		var currentFeedback = [];
+
 		var timeAllowed = 0; 
 		var quizID;
 		//for determining which question we are currently on
@@ -137,21 +141,38 @@
 			        }
 	    		})
 			});
+
+			function saveText() {
+				currentCode[qIndex] = editor.getValue();
+				currentFeedback[qIndex] = document.getElementById("result").innerHTML;
+			}
+
+			function loadText() {
+				editor.setValue(currentCode[qIndex], 1);
+				document.getElementById("result").innerHTML = currentFeedback[qIndex];
+			}
+
 			$('#previous').click(function() {
 				//on previous click, replace title with question
+				saveText();
 				qIndex--;
+				loadText();
 				loadButtons();
 				document.getElementById('problemNum').innerHTML = qIndex + 1;
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 			$('#next').click(function() {
 				//on previous click, replace title with question
+				saveText();
 				qIndex++;
+				loadText();
 				loadButtons();
 				document.getElementById('problemNum').innerHTML = qIndex + 1;
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 		});
+
+
 
 		//hide previous button on first question
 		
@@ -238,6 +259,8 @@
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
 			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
+			        		currentCode[i] = "";
+			        		currentFeedback[i] = "";
 			        	}
 
 			        	timeAllowed = data.timeAllowed;
