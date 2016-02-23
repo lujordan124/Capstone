@@ -48,7 +48,7 @@
 				<div id = "right">
 					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
 					<h2 class = "pull-left"> The results of the test </h2>
-					<textarea id = "results">Hi</textarea>
+					<textarea id = "result"></textarea>
 				</div>
 			</div>
 		</div>
@@ -71,6 +71,9 @@
 		var qIndex = 0;
 		//determine if copied text was inside or outside window
 		var copied = 0;
+
+		var myInterval;
+		var timerTime;
 
 		//initialize editor
 	    var editor = ace.edit("editor");
@@ -188,12 +191,7 @@
 			copied = 0;
 			// window.location.replace("offocus.php");
 		});
-
-		//full-screen change
-		document.addEventListener("fullscreenchange", didChange);
-		document.addEventListener("webkitfullscreenchange", didChange);
-		document.addEventListener("mozfullscreenchange", didChange);
-		
+	
 		//when test is finished
 		function finishTest(element) {
 	    	document.getElementById("bottom").style.disply = "none";
@@ -204,31 +202,51 @@
 			document.exitFullscreen();
 	    }
 
+	    if (document.addEventListener) {
+		    document.addEventListener('webkitfullscreenchange', exitTest, false);
+		    document.addEventListener('mozfullscreenchange', exitTest, false);
+		    document.addEventListener('fullscreenchange', exitTest, false);
+		    document.addEventListener('MSFullscreenChange', exitTest, false);
+		}
+
 	    //if fullscreen changed
-		function didChange() {
+		function exitTest() {
 			// alert("ERROR!!!");
-			var height = $(document).height();
-			var sizeWin = window.innerWidth + " " + window.innerHeight;
-			// alert(sizeWin);
-			if (screen.width == window.innerWidth && screen.height == window.innerHeight) {
-				//RECORD EXITING TESTING MODE
-				//alert("EXITED TESTING MODE");
+			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
 				pauseTest();
 				copied = 0;
-			} else {
-				//alert("ENTERED TESTING MODE");
 			}
 		}
 
 	    function pauseTest() {
 	    	document.getElementById("test").style.display = "none";
 			document.getElementById("resumeTesting").style.display = "block";
+			clearInterval(myInterval);
 	    }
 
 	    function resumeTest() {
 	    	document.getElementById("test").style.display = "block";
 			document.getElementById("resumeTesting").style.display = "none";
+			var date = new Date().getTime();
+			timerTime =  date + (timeAllowed * 60 * 1000);
 	    }
+
+	    function myTimer() {
+			//TIMER FUNCTIONS
+
+			var counterDate = new Date().getTime()
+			var countdown = document.getElementById('countdown');
+			var secondsLeft = timerTime - counterDate;
+
+			var minutes = Math.floor(secondsLeft/60000);
+			var seconds = ((secondsLeft%60000)/1000).toFixed(0);
+			
+			if (seconds > 10) {
+				countdown.innerHTML = '' + minutes + ':' + seconds;
+			} else {
+				countdown.innerHTML = '' + minutes + ':0' + seconds;
+			}
+		}
 
 		function loadButtons() {
 			//next and previous buttons
@@ -259,11 +277,12 @@
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
 			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
-			        		currentCode[i] = "";
-			        		currentFeedback[i] = "";
+			        		currentCode[i] = data.codes[i];
+			        		currentFeedback[i] = data.feedbacks[i];
 			        	}
 
 			        	timeAllowed = data.timeAllowed;
+			        	myInterval = setInterval(function() { myTimer() }, 1000);
 			        	var quizName = data.quizName;
 			        	return 1;
 			        } else {
@@ -276,35 +295,15 @@
 		//force full screen
 		function requestFullScreen(element) {
 			quizID = document.getElementById("quizIDInput").value;
-			resumeTest();
+			// resumeTest();
 
-			//if (getQuestions() == 1) {
+			// if (getQuestions() == 1) {
+				resumeTest();
 				loadButtons();
 
 				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
 				if (requestMethod) {
 					requestMethod.call(element);
-
-					//TIMER FUNCTIONS
-					timeAllowed = 60;
-
-					var date = new Date().getTime();
-					var timerTime =  date + (timeAllowed * 60 * 1000);
-
-					setInterval(function() {
-						var counterDate = new Date().getTime()
-						var countdown = document.getElementById('countdown');
-						var secondsLeft = timerTime - counterDate;
-
-						var minutes = Math.floor(secondsLeft/60000);
-						var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-						
-						if (seconds > 10) {
-							countdown.innerHTML = '' + minutes + ':' + seconds;
-						} else {
-							countdown.innerHTML = '' + minutes + ':0' + seconds;
-						}
-					}, 1000);
 
 					document.getElementById("fullscreen").style.display = "none";
 					document.getElementById("quizIDDiv").style.display = "none";
@@ -318,10 +317,10 @@
 						wscript.SendKeys("{F11}");
 					}
 				}
+			// }
 			// else {
 				// alert("Entered the wrong quiz ID");
 			// }
-
 		}
 
 		</script>
