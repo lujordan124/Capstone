@@ -65,8 +65,12 @@ h2 {
 	background-color: #ccc;
 }
 
-#compile {
+#compile, #submitCode {
 	padding: 3px;
+}
+
+#compile {
+	margin-right: 15px;
 }
 
 #result {
