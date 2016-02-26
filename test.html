@@ -48,7 +48,7 @@
 				<div id = "right">
 					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
 					<h2 class = "pull-left"> The results of the test </h2>
-					<textarea id = "result"></textarea>
+					<textarea readonly id = "result"></textarea>
 				</div>
 			</div>
 		</div>
@@ -124,7 +124,7 @@
 				        	alert("DONE??");
 				        	//CHANGE SCREENS here
 				        }
-		    		})
+		    		});
 				}
 			});
 			//on compilation
@@ -142,18 +142,8 @@
 			        	document.getElementById("result").innerHTML = data.compile_message + "\n" + data.standard_out + "\n" +data.standard_error;
 			        	alert("THE RESULTS OF THE COMPILATION?");
 			        }
-	    		})
+	    		});
 			});
-
-			function saveText() {
-				currentCode[qIndex] = editor.getValue();
-				currentFeedback[qIndex] = document.getElementById("result").innerHTML;
-			}
-
-			function loadText() {
-				editor.setValue(currentCode[qIndex], 1);
-				document.getElementById("result").innerHTML = currentFeedback[qIndex];
-			}
 
 			$('#previous').click(function() {
 				//on previous click, replace title with question
@@ -174,11 +164,28 @@
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 		});
-
-
-
-		//hide previous button on first question
 		
+		function saveText() {
+			currentCode[qIndex] = editor.getValue();
+			currentFeedback[qIndex] = document.getElementById("result").innerHTML;
+		}
+		function loadText() {
+			editor.setValue(currentCode[qIndex], 1);
+			document.getElementById("result").innerHTML = currentFeedback[qIndex];
+		}
+		function saveToServer(){
+			$.ajax({
+				type: "POST",
+		        url: "save.php",
+		        data: {
+		        	code : currentCode, 
+		        },
+		        success: function(data){
+		     		alert("Code saved.");
+		        }
+    		});
+		}
+		//hide previous button on first question
 		
 		//detection of alt-tabbing
 		$(window).focusin(function() {
@@ -207,17 +214,22 @@
 		    document.addEventListener('mozfullscreenchange', exitTest, false);
 		    document.addEventListener('fullscreenchange', exitTest, false);
 		    document.addEventListener('MSFullscreenChange', exitTest, false);
+		    //document.addEventListener('unload', exitTest);
 		}
+
+		//save every 30 seconds
+		setInterval(function() {
+		    saveToServer();
+		}, 30000); 
 
 	    //if fullscreen changed
 		function exitTest() {
-			// alert("ERROR!!!");
+			saveText();
 			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
 				pauseTest();
 				copied = 0;
 			}
 		}
-
 	    function pauseTest() {
 	    	document.getElementById("test").style.display = "none";
 			document.getElementById("resumeTesting").style.display = "block";
@@ -233,7 +245,6 @@
 
 	    function myTimer() {
 			//TIMER FUNCTIONS
-
 			var counterDate = new Date().getTime()
 			var countdown = document.getElementById('countdown');
 			var secondsLeft = timerTime - counterDate;
