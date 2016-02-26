@@ -138,6 +138,7 @@ GetQuestions.php ===========================================================
 			<int>		retake
 			<list> 		code
 			<list> 		feedback
+			<int> 		timeLeft 			// milliseconds
     		<bool> 		success; see if it is successful or not
     		<string> 	message; message about it's return to see what went wrong
 
@@ -230,7 +231,7 @@ SubmitQuiz.php ==========================================================
 		closing the quiz
 
 
-AddRoster.php ==========================================================
+CreateRoster.php ==========================================================
 
 	SESSION:
 		<string> 	teacherID
@@ -254,8 +255,54 @@ AddRoster.php ==========================================================
 		using txt file or whatever, add people to roster
 		able to add manually
 
-			Checks if student should receive additional time 			[x]
-			Checks if student is in class or not           				[x]
+
+EditRoster.php ==========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+
+	INPUT:
+		<string> 	classID
+		<list> 		sectionNumber
+		<list>		studentID
+		<list>		extraTime
+		<list>		studentName
+		<list>		email
+		<list>		ta
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+
+	SUMMARY:
+		using txt file or whatever, edit people to roster
+		able to add manually
+
+
+ViewRoster.php ==========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+
+	INPUT:
+		<string> 	classID
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+		    <list> 		sectionNumber
+			<list>		studentID
+			<list>		extraTime
+			<list>		studentName
+			<list>		email
+			<list>		ta
+
+	SUMMARY:
+		View roster
 
 
 ViewQuiz.php ==========================================================
