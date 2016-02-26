@@ -28,15 +28,22 @@
 					<input type="text" placeholder="answer" ng-model="a"></input>
 					<input type="number" placeholder="num submissions" ng-model="n"></input>
 				</div>
-				<div class="form-group" ng-repeat="item in quiz.questions">
-					<textarea type="text" placeholder="question" ng-model="item" required></textarea>
-				</div>
-				<div class="form-group" ng-repeat="answer in quiz.answers">
-					<textarea type="text" placeholder="answer" ng-model="answer" required></textarea>
-				</div>
-				<div class="form-group" ng-repeat="number in quiz.numSubmission">
-					<input type="number" placeholder="submissions allowed" ng-model="number" required></input>
-				</div>
+				<table class="table">
+					<td ng-repeat="item in quiz.questions track by $index">
+						{{item}}
+					</td>
+				</table>
+				<table class="table">
+					<td ng-repeat="answer in quiz.answers track by $index">
+						{{answer}}
+					</td>
+				</table>
+				<table class="table">
+					<td ng-repeat="number in quiz.numSubmission track by $index">
+						Number Submissions Allowed
+						{{number}}
+					</td>
+				</table>
 
 				<div class="form-group" ng-repeat="time in quiz.startTimes">
 					<label>What are the start times?</label>

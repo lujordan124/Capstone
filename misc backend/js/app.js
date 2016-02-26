@@ -26,6 +26,7 @@ mainApp.controller("HelloController", function($scope) {
 	  $scope.quiz.questions.push(q);
 	  $scope.quiz.answers.push(a);
 	  $scope.quiz.numSubmission.push(n);
+	  console.log($scope.quiz.questions.length);
 	};
 	
 	$scope.remove = function() {
