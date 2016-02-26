@@ -4,11 +4,11 @@ mainApp.controller("HelloController", function($scope) {
 	$scope.quiz = {};
 	$scope.quiz.classID = "";
 	$scope.quiz.quizName = "";
-	$scope.quiz.timeAllowed = 0;
-	$scope.quiz.numSubmission = 0;
+	$scope.quiz.timeAllowed;
+	$scope.quiz.numSubmission = [];
 	$scope.quiz.questions = [];
 	$scope.quiz.answers = [];
-	$scope.quiz.retakes = 0;
+	$scope.quiz.retakes;
 	$scope.quiz.language = "C";
 	$scope.quiz.startTimes = [];
 	$scope.quiz.startDates = [];
@@ -20,14 +20,9 @@ mainApp.controller("HelloController", function($scope) {
 
 
 	$scope.add = function () {
-	  $scope.quiz.questions.push({ 
-			number: $scope.quiz.questions.length + 1,
-			question: "",
-			questionPlaceholder: "eg. write a function that adds two numbers",
-	  });
-	  $scope.quiz.answers.push({
-	  	answer: ""
-	  })
+	  $scope.quiz.questions.push("");
+	  $scope.quiz.answers.push("");
+	  $scope.quiz.numSubmission.push(5);
 	};
 	
 	$scope.remove = function() {

@@ -20,15 +20,19 @@
 					<input type="text" placeholder="classID" ng-model="quiz.classID"/>
 					<input type="text" placeholder="quizName" ng-model="quiz.quizName"/>
 					<input type="number" placeholder="timeAllowed" ng-model="quiz.timeAllowed"/>
-					<input type="number" placeholder="numSubmissions" ng-model="quiz.numSubmissions"/>
 					<input type="number" placeholder="retakes" ng-model="quiz.retakes"/>
 					<input type="text" placeholder="language" ng-model="quiz.language"/>
 				</div>
 				<div class="form-group" ng-repeat="item in quiz.questions">
-					<label>Please input question number {{item.number}}.</label>
-					<textarea type="text" placeholder="{{item.questionPlaceholder}}" ng-model="item.question" required></textarea>
-					<textarea type="text" ng-model="item.answer" required></textarea>
+					<textarea type="text" placeholder="question" ng-model="item" required></textarea>
 				</div>
+				<div class="form-group" ng-repeat="item in quiz.answers">
+					<textarea type="text" placeholder="answer" ng-model="item" required></textarea>
+				</div>
+				<div class="form-group" ng-repeat="item in quiz.numSubmission">
+					<textarea type="number" placeholder="submissions allowed" ng-model="item" required></textarea>
+				</div>
+
 				<div class="form-group" ng-repeat="time in quiz.startTimes">
 					<label>What are the start times?</label>
 					<textarea type="time" ng-model="time" required></textarea>
