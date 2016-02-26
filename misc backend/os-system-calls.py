@@ -73,5 +73,9 @@ if __name__ == "__main__":
 	else:
 		output_data['compile_message'] = 'not compiled. too many params'
 
+	rc = os.remove('a.out')
+	print 'remove rc: ' + str(rc)
 	with open('data.txt', 'w') as outfile:
 		json.dump(output_data, outfile)
+	# a+rwx
+	os.chmod('data.txt', 0777)
