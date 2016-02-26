@@ -9,7 +9,7 @@ mainApp.controller("HelloController", function($scope) {
 	$scope.quiz.questions = [];
 	$scope.quiz.answers = [];
 	$scope.quiz.retakes;
-	$scope.quiz.language = "C";
+	$scope.quiz.language = "";
 	$scope.quiz.startTimes = [];
 	$scope.quiz.startDates = [];
 	$scope.quiz.endTimes = [];
@@ -17,17 +17,22 @@ mainApp.controller("HelloController", function($scope) {
 	$scope.quiz.lateTimes = [];
 	$scope.quiz.lateDates = [];
 	$scope.quiz.sectionNumber = [];
+	$scope.q = "";
+	$scope.a = "";
+	$scope.n;
 
 
-	$scope.add = function () {
-	  $scope.quiz.questions.push("");
-	  $scope.quiz.answers.push("");
-	  $scope.quiz.numSubmission.push(5);
+	$scope.add = function (q, a, n) {
+	  $scope.quiz.questions.push(q);
+	  $scope.quiz.answers.push(a);
+	  $scope.quiz.numSubmission.push(n);
 	};
 	
 	$scope.remove = function() {
 		$scope.quiz.questions.pop();
-	}
+		$scope.quiz.answers.pop();
+		$scope.quiz.numSubmission.pop();
+	};
 	
   $scope.createTest = function() {
 		if (!$scope.testCreationForm.$valid) {

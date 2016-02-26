@@ -23,43 +23,48 @@
 					<input type="number" placeholder="retakes" ng-model="quiz.retakes"/>
 					<input type="text" placeholder="language" ng-model="quiz.language"/>
 				</div>
+				<div>
+					<input type="text" placeholder="question" ng-model="q"></input>
+					<input type="text" placeholder="answer" ng-model="a"></input>
+					<input type="number" placeholder="num submissions" ng-model="n"></input>
+				</div>
 				<div class="form-group" ng-repeat="item in quiz.questions">
 					<textarea type="text" placeholder="question" ng-model="item" required></textarea>
 				</div>
-				<div class="form-group" ng-repeat="item in quiz.answers">
-					<textarea type="text" placeholder="answer" ng-model="item" required></textarea>
+				<div class="form-group" ng-repeat="answer in quiz.answers">
+					<textarea type="text" placeholder="answer" ng-model="answer" required></textarea>
 				</div>
-				<div class="form-group" ng-repeat="item in quiz.numSubmission">
-					<textarea type="number" placeholder="submissions allowed" ng-model="item" required></textarea>
+				<div class="form-group" ng-repeat="number in quiz.numSubmission">
+					<input type="number" placeholder="submissions allowed" ng-model="number" required></input>
 				</div>
 
 				<div class="form-group" ng-repeat="time in quiz.startTimes">
 					<label>What are the start times?</label>
-					<textarea type="time" ng-model="time" required></textarea>
+					<input type="time" ng-model="time" required></input>
 				</div>
 				<div class="form-group" ng-repeat="time in quiz.endTimes">
 					<label>What are the end times?</label>
-					<textarea type="time" ng-model="time" required></textarea>
+					<input type="time" ng-model="time" required></input>
 				</div>
 				<div class="form-group" ng-repeat="time in quiz.lateTimes">
 					<label>What are the late times?</label>
-					<textarea type="time" ng-model="time" required></textarea>
+					<input type="time" ng-model="time" required></input>
 				</div>
 				<div class="form-group" ng-repeat="date in quiz.startDates">
 					<label>What are the start dates?</label>
-					<textarea type="date" ng-model="date" required></textarea>
+					<input type="date" ng-model="date" required></input>
 				</div>
 				<div class="form-group" ng-repeat="date in quiz.endDates">
 					<label>What are the end dates?</label>
-					<textarea type="date" ng-model="date" required></textarea>
+					<input type="date" ng-model="date" required></input>
 				</div>
 				<div class="form-group" ng-repeat="date in quiz.lateDates">
 					<label>What are the late dates?</label>
-					<textarea type="date" ng-model="date" required></textarea>
+					<input type="date" ng-model="date" required></input>
 				</div>
 			
 			</form>
-			<button class="btn btn-primary" ng-click="add()">New Question</button>
+			<button class="btn btn-primary" ng-click="add(q, a, n)">New Question</button>
 			<button class="btn btn-warning" ng-click="remove()">Remove Question</button>
 			<button class="btn btn-info" ng-click="createTest()">Create Quiz/Test</button>
 			<br>
