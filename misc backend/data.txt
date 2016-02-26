@@ -1,1 +1,0 @@
-{"compile_message": "program compiled successfully!", "standard_out": "Five in number is 5Success", "standard_error": ""}
