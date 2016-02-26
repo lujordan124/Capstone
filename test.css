@@ -106,3 +106,8 @@ h2 {
 #bottom {
 	top: 0px;
 }
+
+#countdown {
+	font-size: 15;
+	color: white;
+}
