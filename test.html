@@ -42,7 +42,8 @@
 			<div id = "bottom" style="display:none">
 				<div id = "left">
 					<h2 class = "pull-left"> Code here</h2>
-					<button class="btn btn-default pull-right" id = "compile">SUBMIT</button>
+					<button class="btn btn-default pull-right" id = "submitCode">SUBMIT</button>
+					<button class="btn btn-default pull-right" id = "compile">COMPILE</button>
 					<pre id="editor"></pre><br>
 				</div>
 				<div id = "right">
@@ -78,7 +79,7 @@
 		//initialize editor
 	    var editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/twilight");
-	    editor.getSession().setMode("ace/mode/c");
+	    editor.getSession().setMode("ace/mode/c_cpp");
 	    editor.getSession().on('change', function(e) {
 	    	var startRow = e["start"]["row"];
 	    	var startColumn = e["start"]["column"];
@@ -121,7 +122,8 @@
 				        	submission: editor.getValue(),
 				        	grade: 1 },
 				        success: function(data){
-				        	alert("DONE??");
+				        	document.getElementById("result").innerHTML = data.compile_message + "\n" + data.standard_out + "\n" +data.standard_error;
+				        	alert("You have successfully submitted your result");
 				        	//CHANGE SCREENS here
 				        }
 		    		});
@@ -140,7 +142,7 @@
 			        	grade: 0 },
 			        success: function(data){
 			        	document.getElementById("result").innerHTML = data.compile_message + "\n" + data.standard_out + "\n" +data.standard_error;
-			        	alert("THE RESULTS OF THE COMPILATION?");
+			        	// alert("THE RESULTS OF THE COMPILATION?");
 			        }
 	    		});
 			});
@@ -308,7 +310,7 @@
 			quizID = document.getElementById("quizIDInput").value;
 			// resumeTest();
 
-			// if (getQuestions() == 1) {
+			if (getQuestions() == 1) {
 				resumeTest();
 				loadButtons();
 
@@ -328,7 +330,7 @@
 						wscript.SendKeys("{F11}");
 					}
 				}
-			// }
+			}
 			// else {
 				// alert("Entered the wrong quiz ID");
 			// }

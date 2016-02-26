@@ -65,8 +65,12 @@ h2 {
 	background-color: #ccc;
 }
 
-#compile {
+#compile, #submitCode {
 	padding: 3px;
+}
+
+#compile {
+	margin-right: 15px;
 }
 
 #result {
@@ -101,4 +105,9 @@ h2 {
 
 #bottom {
 	top: 0px;
+}
+
+#countdown {
+	font-size: 15;
+	color: white;
 }
