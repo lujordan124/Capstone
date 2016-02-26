@@ -196,11 +196,13 @@ CreateQuiz.php ==========================================================
 		<list>		answer
 		<int>		retake
 		<string>	language
-		<list>		beginTime
-		<list>		beginDate
+		<list>		beginTime			- list of HTML5 time format
+		<list>		beginDate			- list of HTML5 date format
 		<list>		endTime
 		<list>		endDate
-		<list>		sectionNumber
+		<list> 		lateTime
+		<list>		lateDate
+		<list>		sectionNumber		- list of section number (first item here corresponds to first item in time/date)
 
 	OUTPUT:
 		[JSON OBJECT] output
@@ -244,7 +246,7 @@ CreateRoster.php ==========================================================
 		<list>		extraTime
 		<list>		studentName
 		<list>		email
-		<list>		ta
+		<list>		ta 					- boolean if the student is TA or not
 
 	OUTPUT:
 		[JSON OBJECT] output
