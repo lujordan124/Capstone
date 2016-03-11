@@ -76,6 +76,8 @@
 		var myInterval;
 		var timerTime;
 
+		var EnteredTest = 0;
+
 		//initialize editor
 	    var editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/twilight");
@@ -195,7 +197,9 @@
 		});
 		$(window).blur(function(){
 			//ALERT THAT IT BLURRED
-			pauseTest();
+			if(EnteredTest){
+				pauseTest();
+			}
 			//alert("BLUR");
 			copied = 0;
 			// window.location.replace("offocus.php");
@@ -307,6 +311,7 @@
 
 		//force full screen
 		function requestFullScreen(element) {
+			EnteredTest = 1;
 			quizID = document.getElementById("quizIDInput").value;
 			// resumeTest();
 
