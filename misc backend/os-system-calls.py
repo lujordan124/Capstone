@@ -12,15 +12,18 @@ if __name__ == "__main__":
 	output_data['standard_error'] = ''
 	if num_args == 2: # this file and param file
 		try:
+			#
+			# First attempt to compile
+			#
 			compile_process = subprocess.Popen(['gcc', sys.argv[1]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 			out, err = compile_process.communicate()
-			# print 'hello!'
-			# print err
-			# print 'goodbye!'
-			if not err == "":
+			rc = compile_process.returncode
+			print 'return code is: ' + str(rc)
+			if not rc == 0:
 				raise Exception
 			output_data['compile_message'] = 'program compiled successfully!'
 
+			# Then attempt to run
 			try:
 				sp = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 				try:
@@ -33,22 +36,24 @@ if __name__ == "__main__":
 					output_data['standard_out'] = out
 					output_data['standard_error'] = err
 			except Exception as e:
-				output_data['standard_out'] = 'run problem' # something wrong with running the command
+				output_data['standard_out'] = 'run problem'
 		except Exception as e: 
-			output_data['compile_message'] = 'compile problem' # currently both gcc not found errors and actual compile errors both end here, need to change later
+			output_data['compile_message'] = 'compile problem'
 
 	elif num_args == 3: # this file and 2 param files
 		try:
-			sp = subprocess.Popen(['gcc', sys.argv[1], sys.argv[2]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			sp.wait(timeout=10)
+			#
+			# First attempt to compile
+			#
+			compile_process = subprocess.Popen(['gcc', sys.argv[1], sys.argv[2]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+			out, err = compile_process.communicate()
+			rc = compile_process.returncode
+			print 'return code is: ' + str(rc)
+			if not rc == 0:
+				raise Exception
 			output_data['compile_message'] = 'program compiled successfully!'
 
-			# compile_process = subprocess.Popen(['gcc', sys.argv[1], sys.argv[2]], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-			# out, err = compile_process.communicate()
-			# if not err == "": this isn't working as of now, b/c warnings also raise exceptions, need to find solution
-			# 	raise Exception
-			# output_data['compile_message'] = 'program compiled successfully!'
-
+			# Then attempt to run
 			try:
 				sp = subprocess.Popen([command], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 				try:
@@ -68,5 +73,9 @@ if __name__ == "__main__":
 	else:
 		output_data['compile_message'] = 'not compiled. too many params'
 
+	rc = os.remove('a.out')
+	print 'remove rc: ' + str(rc)
 	with open('data.txt', 'w') as outfile:
 		json.dump(output_data, outfile)
+	# a+rwx
+	os.chmod('data.txt', 0777)

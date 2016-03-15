@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+   
+	<head>
+		<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script> 
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<title>Create a new test or quiz!</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
+		<script src="js/app.js"></script>
+	</head>
+   
+	<body ng-app="mainApp">
+	  
+		<div ng-controller="HelloController" class="container">
+			<h2 style="text-align: center">Welcome to my version of Typeform!</h2>
+			<hr>
+			<form name="testCreationForm">
+				<div ng-show="part1">
+					<div class="form-group">
+						<input type="text" placeholder="classID" ng-model="quiz.classID"/>
+						<input type="text" placeholder="quizName" ng-model="quiz.quizName"/>
+						<input type="number" placeholder="timeAllowed" ng-model="quiz.timeAllowed"/>
+						<input type="number" placeholder="retakes" ng-model="quiz.retakes"/>
+						<input type="text" placeholder="language" ng-model="quiz.language"/>
+					</div>
+					<div class="form-group">
+						<input type="text" placeholder="question" ng-model="question"></input>
+						<input type="text" placeholder="answer" ng-model="answer"></input>
+						<input type="number" placeholder="num submissions" ng-model="submissions"></input>
+					</div>
+				
+					<button type="button" class="btn btn-primary" ng-click="add(question, answer, submissions)">Add Question</button>
+					<button type="button" class="btn btn-warning" ng-click="remove()">Remove Question</button>
+					<button type="button" class="btn btn-info" ng-click="showDetails()">Quiz Scheduling Details</button>
+
+					<div class="row">
+						<div class="col-md-5">
+							<div ng-repeat="question in quiz.questions track by $index">
+								{{ question }}
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div ng-repeat="answer in quiz.answers track by $index">
+								{{ answer }}
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div ng-repeat="number in quiz.numSubmission track by $index">
+								Submissions allowed: {{ number }}
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div ng-show="!part1">
+					<div class="form-group">
+						<label>What are the start times?</label>
+						<input type="time" ng-model="startT" required></input>
+						<label>What are the end times?</label>
+						<input type="time" ng-model="endT" required></input>
+						<label>What are the late times?</label>
+						<input type="time" ng-model="lateT" required></input>
+						<label>What are the start dates?</label>
+						<input type="date" ng-model="startD" required></input>
+						<label>What are the end dates?</label>
+						<input type="date" ng-model="endD" required></input>
+						<label>What are the late dates?</label>
+						<input type="date" ng-model="lateD" required></input>
+						<label>What are the section numbers?</label>
+						<input type="number" ng-model="sectionNum" required></input>
+					</div>
+
+					<button type="button" class="btn btn-info" ng-click="showQuestions()">Question Details</button>
+					<button type="button" class="btn btn-warning" ng-click="createTest()">Create Quiz/Test</button>
+					<button type="button" class="btn btn-primary" ng-click="addTime(startT, endT, lateT, startD, endD, lateD, sectionNum)">Add Section</button>
+
+					<div class="row">
+						<div class="col-md-5">
+							<div ng-repeat="start in quiz.startTimes track by $index">
+								{{ start }}
+							</div>
+							<div ng-repeat="end in quiz.endTimes track by $index">
+								{{ end }}
+							</div>
+							<div ng-repeat="late in quiz.lateTimes track by $index">
+								{{ late }}
+							</div>
+						</div>
+						<div class="col-md-5">
+							<div ng-repeat="start in quiz.startDates track by $index">
+								{{ start }}
+							</div>
+							<div ng-repeat="end in quiz.endDates track by $index">
+								{{ end }}
+							</div>
+							<div ng-repeat="late in quiz.lateDates track by $index">
+								{{ late }}
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div ng-repeat="section in quiz.sectionNumbers track by $index">
+								{{ section }}
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</form>
+
+
+		</div>
+
+	  
+	</body>
+</html>

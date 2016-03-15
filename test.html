@@ -116,7 +116,7 @@
 				if (confirm("Are you sure you want to want to submit the quiz? You will not be able to make changes once you have submitted the assignment.")) {
 					$.ajax({
 						type: "POST",
-				        url: "sendCode.php",
+				        url: "Submit.php",
 				        //Requires more data, get from READ ME
 				        data: {
 				        	quizID: quizID,
@@ -135,7 +135,7 @@
 			$('#compile').click(function() {
 				$.ajax({
 					type: "POST",
-			        url: "compileCode.php",
+			        url: "Submit.php",
 			        //Requires more data, get from READ ME
 			        data: {
 			        	quizID: quizID, 
@@ -180,7 +180,7 @@
 		function saveToServer(){
 			$.ajax({
 				type: "POST",
-		        url: "save.php",
+		        url: "Save.php",
 		        data: {
 		        	code : currentCode, 
 		        },
@@ -233,6 +233,18 @@
 			saveText();
 			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
 				pauseTest();
+
+				$.ajax({
+					type: "POST",
+			        url: "SubmitQuiz.php",
+			        data: {
+			        	quizID : quizID, 
+			        },
+			        success: function(data){
+			     		// alert("Code saved.");
+			        }
+	    		});
+
 				copied = 0;
 			}
 		}
@@ -283,7 +295,7 @@
 		function getQuestions() {
 			$.ajax({
 		        type: "POST",
-		        url: "getQuestions.php",
+		        url: "GetQuestions.php",
 		        data: {quizID: quizID},
 		        dataType: "JSON",
 		        success: function(data){

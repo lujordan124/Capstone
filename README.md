@@ -138,6 +138,7 @@ GetQuestions.php ===========================================================
 			<int>		retake
 			<list> 		code
 			<list> 		feedback
+			<int> 		timeLeft 			// milliseconds
     		<bool> 		success; see if it is successful or not
     		<string> 	message; message about it's return to see what went wrong
 
@@ -195,11 +196,13 @@ CreateQuiz.php ==========================================================
 		<list>		answer
 		<int>		retake
 		<string>	language
-		<list>		beginTime
-		<list>		beginDate
+		<list>		beginTime			- list of HTML5 time format
+		<list>		beginDate			- list of HTML5 date format
 		<list>		endTime
 		<list>		endDate
-		<list>		sectionNumber
+		<list> 		lateTime
+		<list>		lateDate
+		<list>		sectionNumber		- list of section number (first item here corresponds to first item in time/date)
 
 	OUTPUT:
 		[JSON OBJECT] output
@@ -230,7 +233,32 @@ SubmitQuiz.php ==========================================================
 		closing the quiz
 
 
-AddRoster.php ==========================================================
+CreateRoster.php ==========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+
+	INPUT:
+		<string> 	classID
+		<list> 		sectionNumber
+		<list>		studentID
+		<list>		extraTime
+		<list>		studentName
+		<list>		email
+		<list>		ta 					- boolean if the student is TA or not
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+
+	SUMMARY:
+		using txt file or whatever, add people to roster
+		able to add manually
+
+
+EditRoster.php ==========================================================
 
 	SESSION:
 		<string> 	teacherID
@@ -251,11 +279,32 @@ AddRoster.php ==========================================================
 		    <string>	message
 
 	SUMMARY:
-		using txt file or whatever, add people to roster
+		using txt file or whatever, edit people to roster
 		able to add manually
 
-			Checks if student should receive additional time 			[x]
-			Checks if student is in class or not           				[x]
+
+ViewRoster.php ==========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+
+	INPUT:
+		<string> 	classID
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+		    <list> 		sectionNumber
+			<list>		studentID
+			<list>		extraTime
+			<list>		studentName
+			<list>		email
+			<list>		ta
+
+	SUMMARY:
+		View roster
 
 
 ViewQuiz.php ==========================================================
