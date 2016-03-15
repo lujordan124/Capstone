@@ -323,11 +323,9 @@
 
 		//force full screen
 		function requestFullScreen(element) {
-			EnteredTest = 1;
-			quizID = document.getElementById("quizIDInput").value;
-			// resumeTest();
-
 			if (getQuestions() == 1) {
+				quizID = document.getElementById("quizIDInput").value;
+				EnteredTest = 1;
 				resumeTest();
 				loadButtons();
 
@@ -348,9 +346,9 @@
 					}
 				}
 			}
-			// else {
-				// alert("Entered the wrong quiz ID");
-			// }
+			else {
+				alert("Entered the wrong quiz ID");
+			}
 		}
 
 		</script>
