@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title> ace </title>
+		<title> Quiz Sample </title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -8,6 +8,9 @@
 
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!--import our javascript methods-->
+		<script src="test.js"></script>
 
 		<!-- ACE -->
 		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -47,8 +50,8 @@
 					<pre id="editor"></pre><br>
 				</div>
 				<div id = "right">
-					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
-					<h2 class = "pull-left"> The results of the test </h2>
+					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)">FINISH</button>
+					<h2 class = "pull-left">The results of the test</h2>
 					<textarea readonly id = "result"></textarea>
 				</div>
 			</div>
@@ -68,14 +71,18 @@
 
 		var timeAllowed = 0; 
 		var quizID;
+
 		//for determining which question we are currently on
 		var qIndex = 0;
+
 		//determine if copied text was inside or outside window
 		var copied = 0;
 
 		var myInterval;
 		var timerTime;
 
+		//determined if test was entered 
+		//(to prevent action occuring if alt-tabbing before test is entered)
 		var EnteredTest = 0;
 
 		//initialize editor
@@ -148,9 +155,8 @@
 			        }
 	    		});
 			});
-
+			//on previous click when going through questions
 			$('#previous').click(function() {
-				//on previous click, replace title with question
 				saveText();
 				qIndex--;
 				loadText();
@@ -158,6 +164,7 @@
 				document.getElementById('problemNum').innerHTML = qIndex + 1;
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
+			//on next click when going through questions
 			$('#next').click(function() {
 				//on previous click, replace title with question
 				saveText();
@@ -168,54 +175,18 @@
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 		});
-		
-		function saveText() {
-			currentCode[qIndex] = editor.getValue();
-			currentFeedback[qIndex] = document.getElementById("result").innerHTML;
-		}
-		function loadText() {
-			editor.setValue(currentCode[qIndex], 1);
-			document.getElementById("result").innerHTML = currentFeedback[qIndex];
-		}
-		function saveToServer(){
-			$.ajax({
-				type: "POST",
-		        url: "Save.php",
-		        data: {
-		        	code : currentCode, 
-		        },
-		        success: function(data){
-		     		alert("Code saved.");
-		        }
-    		});
-		}
-		//hide previous button on first question
-		
+
 		//detection of alt-tabbing
-		$(window).focusin(function() {
-			//alert("I'M BACK");
-		});
 		$(window).blur(function(){
-			//ALERT THAT IT BLURRED
+			//pause test if alt-tabbed
 			if(EnteredTest){
 				pauseTest();
 			}
-			//alert("BLUR");
 			copied = 0;
-			// window.location.replace("offocus.php");
 		});
-	
-		//when test is finished
-		function finishTest(element) {
-	    	document.getElementById("bottom").style.disply = "none";
-			document.getElementById("problem").text = "hidden";
-			document.getElementById('countdown').style.display = "none";
-	    	document.webkitExitFullscreen();
-			document.mozCancelFullscreen();
-			document.exitFullscreen();
-	    }
 
-	    if (document.addEventListener) {
+		//event listener for fullscreen change
+		if (document.addEventListener) {
 		    document.addEventListener('webkitfullscreenchange', exitTest, false);
 		    document.addEventListener('mozfullscreenchange', exitTest, false);
 		    document.addEventListener('fullscreenchange', exitTest, false);
@@ -223,134 +194,10 @@
 		    //document.addEventListener('unload', exitTest);
 		}
 
-		//save every 30 seconds
+		//save code every 10 seconds
 		setInterval(function() {
 		    saveToServer();
-		}, 30000); 
-
-	    //if fullscreen changed
-		function exitTest() {
-			saveText();
-			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-				pauseTest();
-
-				$.ajax({
-					type: "POST",
-			        url: "SubmitQuiz.php",
-			        data: {
-			        	quizID : quizID, 
-			        },
-			        success: function(data){
-			     		// alert("Code saved.");
-			        }
-	    		});
-
-				copied = 0;
-			}
-		}
-	    function pauseTest() {
-	    	document.getElementById("test").style.display = "none";
-			document.getElementById("resumeTesting").style.display = "block";
-			clearInterval(myInterval);
-	    }
-
-	    function resumeTest() {
-	    	document.getElementById("test").style.display = "block";
-			document.getElementById("resumeTesting").style.display = "none";
-			var date = new Date().getTime();
-			timerTime =  date + (timeAllowed * 60 * 1000);
-	    }
-
-	    function myTimer() {
-			//TIMER FUNCTIONS
-			var counterDate = new Date().getTime()
-			var countdown = document.getElementById('countdown');
-			var secondsLeft = timerTime - counterDate;
-
-			var minutes = Math.floor(secondsLeft/60000);
-			var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-			
-			if (seconds > 10) {
-				countdown.innerHTML = '' + minutes + ':' + seconds;
-			} else {
-				countdown.innerHTML = '' + minutes + ':0' + seconds;
-			}
-		}
-
-		function loadButtons() {
-			//next and previous buttons
-			if(qIndex <= 0){
-				document.getElementById('previous').style.display = 'none';
-			} else {
-				document.getElementById('previous').style.display = 'inline-block';
-			}
-			//hide next button on last question
-			if(qIndex == questions.length-1 || qIndex == -1){
-				document.getElementById('next').style.display = 'none';
-			} else {
-				document.getElementById('next').style.display = 'inline-block';
-			}
-		}
-
-		function getQuestions() {
-			$.ajax({
-		        type: "POST",
-		        url: "GetQuestions.php",
-		        data: {quizID: quizID},
-		        dataType: "JSON",
-		        success: function(data){
-		        	//retrieve quiz from database in JSON format
-		        	//document.getElementById("quizName").innerHTML = data.quizName;
-		        	if (data.success) {
-		        		document.getElementById("description").innerHTML = data.question[0];
-			        	var i;
-			        	for (i = 0; i < data.question.length; i++) {
-			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
-			        		currentCode[i] = data.codes[i];
-			        		currentFeedback[i] = data.feedbacks[i];
-			        	}
-
-			        	timeAllowed = data.timeAllowed;
-			        	myInterval = setInterval(function() { myTimer() }, 1000);
-			        	var quizName = data.quizName;
-			        	return 1;
-			        } else {
-			        	return 0;
-			        }
-		        }
-    		});
-		}
-
-		//force full screen
-		function requestFullScreen(element) {
-			if (getQuestions() == 1) {
-				quizID = document.getElementById("quizIDInput").value;
-				EnteredTest = 1;
-				resumeTest();
-				loadButtons();
-
-				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-				if (requestMethod) {
-					requestMethod.call(element);
-
-					document.getElementById("fullscreen").style.display = "none";
-					document.getElementById("quizIDDiv").style.display = "none";
-					document.getElementById("countdown").style.display = "block";
-					document.getElementById("bottom").style.display = "block";
-					document.getElementById("problem").style.display = "block";
-
-				} else if (typeof window.ActiveXObject !== "undefined") {
-					var wscript  = new ActiveXObject("WScript.Shell");
-					if (wscript != null) {
-						wscript.SendKeys("{F11}");
-					}
-				}
-			}
-			else {
-				alert("Entered the wrong quiz ID");
-			}
-		}
-
+		}, 10000); 
 		</script>
 	</body>
 </html>
