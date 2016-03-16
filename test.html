@@ -76,7 +76,7 @@
 		var myInterval;
 		var timerTime;
 
-		var EnteredTest = 0;
+		var enteredTest = 0;
 
 		//initialize editor
 	    var editor = ace.edit("editor");
@@ -197,7 +197,7 @@
 		});
 		$(window).blur(function(){
 			//ALERT THAT IT BLURRED
-			if(EnteredTest){
+			if(enteredTest){
 				pauseTest();
 			}
 			//alert("BLUR");
@@ -310,8 +310,15 @@
 			        		currentFeedback[i] = data.feedbacks[i];
 			        	}
 
-			        	timeAllowed = data.timeAllowed;
+			        	if (data.timeLeft != null) {
+			        		timeAllowed = data.timeLeft;
+				        } else {
+				        	timeAllowed = data.timeAllowed;
+				        }
+
+				        clearInterval(myTimer);
 			        	myInterval = setInterval(function() { myTimer() }, 1000);
+
 			        	var quizName = data.quizName;
 			        	return 1;
 			        } else {
@@ -325,7 +332,7 @@
 		function requestFullScreen(element) {
 			if (getQuestions() == 1) {
 				quizID = document.getElementById("quizIDInput").value;
-				EnteredTest = 1;
+				enteredTest = 1;
 				resumeTest();
 				loadButtons();
 
