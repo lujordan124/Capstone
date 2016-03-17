@@ -247,7 +247,7 @@
 			var date = new Date().getTime();
 			clearInterval(myInterval);
 			timerTime =  date + (timeAllowed * 1000);
-			myInterval = setInterval(function() { myTimer() }, 1000);
+			myInterval = setInterval(myTimer, 1000);
 	    }
 
 	    function myTimer() {
@@ -308,8 +308,10 @@
 				        	timeAllowed = data.timeAllowed;
 				        }
 
-				        clearInterval(myInterval);
-			        	myInterval = setInterval(function() { myTimer() }, 1000);
+				        var date = new Date().getTime();
+						clearInterval(myInterval);
+						timerTime =  date + (timeAllowed * 1000);
+			        	myInterval = setInterval(myTimer, 1000);
 
 			        	var quizName = data.quizName;
 			        } else {
