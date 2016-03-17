@@ -1,97 +1,99 @@
 READ ME
 
+TODO (Backend):
+	1. Python - unique name and chmod, feedback filter (Michael)
+	2. Klobbering (Both)
+	3. Grading (Both)
 
 Mongo DB ===================================================================
 
 	use capstone
+	db.collection_name.find({name: "whatever"})
+	db.collection_name.remove({name: "whatever"})
 
 
-	****** Each quiz and its information *******
+	COLLECTIONS
 
-	db.quizzes.find()
-		teacherID						teacher of the class
-		quizID							quiz id, unique identifier autogen
-		classID							class id, such as CS 3330	
-		quizName						quiz title
-		timeAllowed						time allowed for whole quiz
-		question 						list of questions (description)
-		numSubmission					number of submission allow for each q
-		answer							main.c file of the teachers
-		language 						language file (currently only C)
-		retake 							are they allowed for retake?
-		beginTime		 				list/section when is the quiz allowed
-		beginDate						"  "
-		endTime			 				list/section when is the quiz over?
-		endDate							"  "
-		lateTime						list/section when will it be counted late
-		lateDate 						"  "
-		sectionNumber					list/section what section it is
+	*note these are not organized in the most smartest way...*
+	TODO Future: make it nested for list....
 
 
 
-	******** Each submission for grading / testing / save *******
+	[Information about the quiz]
+	quizzes
+		teacherID			<string>	teacher of the class
+		quizID				<string>	quiz id, unique identifier autogen
+		classID				<string>	class id, such as CS3330 (No space)
+		quizName			<string> 	quiz title
+		timeAllowed			<int>		time allowed (minutes) for whole quiz
+		question 			<list-str>	list of questions (description)
+		numSubmission		<list-int> 	number of submission allow for each q
+		answer				<list-str> 	main.c file of the teachers
+		language 			<string> 	language file (currently only C)
+		retake 				<int> 		are they allowed for retake?
+		beginTime	 		<list-time>	list/section when is the quiz allowed
+		beginDate			<list-date>	"  "
+		endTime			 	<list-time>	list/section when is the quiz over?
+		endDate				<list-date>	"  "
+		lateTime			<list-time>	list/section when will it be counted late
+		lateDate 			<list-date>	"  "
+		sectionNumber		<list-int>	list/section what section it is
 
-	db.submission.find()
-		studentID						student such as jl4vw
-		quizID							quiz id of a partiular quiz (selected)
-		questionNumber 					which question the submission is for
-		code 					[]		the code
-		graded					[]		is this for grade or for testing	
-		result 							what the output was JSON
-		submitDate 						when it was submitted
-		submitTime 	 					"  "
-		save 							was this saved?
-	
+
+	[Information about each submission / save]
+	submission
+		studentID			<string>	student such as jl4vw
+		quizID				<string>	quiz id of a partiular quiz (selected)
+		questionNumber 		<int>		which question the submission is for
+		code 				<string>	the code
+		graded				<bool>		is this for grade or for testing	
+		result 				<str-json>	what the output was JSON
+		submitDate 			<date>		when it was submitted
+		submitTime 	 		<time>		"  "
+		save 				<bool>		was this saved?
+		
 
 
-	******** Overall quiz information per student ***********
-
+	[Information about each quiz submission]
 	db.quizSubmission.find()
-		MyIPAddress 			[] 		ip address of the student
-		numSubmission					list of number of submission
-		finished 						is the student done?
-		studentID 						student id
-		quizID 							quiz id
-		beginDate 						when did the quiz begin
-		beginTime				 		"  "
-		endDate							when did the quiz end
-		endTime					 		"  "
-		exitTime				[]	 	list - did this person exit
-		timeAllowed				[]		time allowed for that particular student
-		grade 					[]		grade
-		result 					[] 		list - result
+		MyIPAddress 		<string> 	ip address of the student 	[UNFINISHED]
+		try					<int>		number of tries
+		finished 			<bool>		is the student done?
+		studentID 			<string>	student id
+		quizID 				<string>	quiz id
+		startDate 			<date>		when did the quiz begin
+		startTime			<time>		"  "
+		endDate				<date>		when did the quiz end
+		endTime				<time>		"  "
+		exitTime			<list-date>	list - did this person exit [UNFINISHED]
+
+
+	[Roster for class]
+	roster
+		teacherID			<string>	teacher of the class
+		studentID 			<string>	a student
+		classID				<string>	class id
+		sectionNumber 		<int>		section number for that student
+		extraTime			<double>	extra time multiplier
+		email				<string>	email of the student
+		studentName			<string>	student name
+		ta 					<bool>		ta - is it the ta?			[FIX]
+
+
+	[Additional Priv]
+	allowed
+		studentID			<string>	student ID
+		note				<string>	any notes by TA / Prof
+		lateAllowed 		<bool>		are they excused to be late by TA
+		exitAllowed 		<bool> 		are they excused to exit by TA
+		moreAllowed			<bool>		more submission allowed
+		quizID				<string> 	quizID
+		lateDateAllowed		<bool>		late date allowed
+		retakeAllowed 		<bool>		additional take allowed
 
 
 
-
-	******** Roster for class *********
-
-	db.roster.find()
-		teacherID				[] 		teacher of the class
-		studentID 				[] 		a student
-		classID					[] 		class id
-		sectionNumber 			[]   	section number for that student
-		extraTime				[] 		extra time multiplier
-		email					[] 		email of the student
-		studentName				[] 		student name
-
-
-
-	******** Additional Priv *******
-
-	db.allowed.find()
-		studentID						student ID
-		note					[] 		any notes by TA / Prof
-		lateAllowed 			[] 		are they excused to be late by TA
-		exitAllowed 			[] 		are they excused to exit by TA
-		moreAllowed				[]		more submission allowed
-		quitID					[] 		quizID
-		lateDateAllowed			[]  	late date allowed
-		retakeAllowed 			[]		additional take allowed
-
-
-
-Quizzes.php ================================================================
+Quizzes.php [UNFINISHED - Additional Feature] ================================================================
 
 	SESSION:
 		<string> 	MystudentID / TeacherID
@@ -114,13 +116,10 @@ Quizzes.php ================================================================
 GetQuestions.php ===========================================================
 
 	SESSION:
-		<string> 	MystudentID
-		<string> 	MyclassID
+		<string> 	studentID
 		<int>		MysectionNumber
-		<double>	MyextraTime
+		<double>	extraTime
 		<string>	MyIPAddress
-		<bool> 		lateDateAllowed
-		<int> 		retakeAllowed
 
 	INPUT:
 		<string> 	quizID
@@ -131,14 +130,18 @@ GetQuestions.php ===========================================================
 			<list> 		numSubmission
 			<int> 		timeAllowed
 			<string> 	quizName
-			<time> 		beginTime
-			<date> 		beginDate
-			<time> 		endTime
-			<date>		endDate
-			<int>		retake
+			<time> 		currTime
+			<date>		currDate
+			<string>	language
+			<int>		try				// number of times they have taken
+
+			<time> 		startTime
+			<date> 		startDate
 			<list> 		code
 			<list> 		feedback
+			<bool>		continue;		is this a continue or a new quiz?
 			<int> 		timeLeft 			// milliseconds
+
     		<bool> 		success; see if it is successful or not
     		<string> 	message; message about it's return to see what went wrong
 
@@ -164,7 +167,7 @@ Submit.php ===============================================================
 		<string> 	quizID
 		<int> 		questionNumber
 		<string>	submission
-		<bool>		grade
+		<bool>		grade 				// is this for grade or not
 
 	OUTPUT:
 		[JSON OBJECT] output
@@ -179,6 +182,43 @@ Submit.php ===============================================================
 	SUMMARY:
 		given quizID and the questionNumber and compile and run 	
 		  	Save to database                                      	
+
+SubmitQuiz.php ==========================================================
+
+	SESSION:
+		<string> 	MystudentID
+		<string> 	MyclassID
+		<int>		MysectionNumber
+		<double>	MyextraTime
+		<string>	MyIPAddress
+
+
+	INPUT:
+		<string> 	quizID
+
+
+	OUTPUT:
+		"success"
+
+	SUMMARY:
+		closing the quiz
+
+
+SaveQuiz.php =============================================================
+
+	SESSION:
+		<string> 	MystudentID
+		<string>	MyclassID
+
+	INPUT:
+		<string> 	quizID
+		<list> 		code
+
+	OUTPUT:
+	[JSON OBJECT] output
+		<bool> 		success
+		<string>	message
+
 
 
 
@@ -208,29 +248,10 @@ CreateQuiz.php ==========================================================
 		[JSON OBJECT] output
 		    <bool> 		success
 		    <string>	message
+		    <string> 	quizID
 
   	SUMMARY:
     	makes the quiz                                        
-
-SubmitQuiz.php ==========================================================
-
-	SESSION:
-		<string> 	MystudentID
-		<string> 	MyclassID
-		<int>		MysectionNumber
-		<double>	MyextraTime
-		<string>	MyIPAddress
-
-
-	INPUT:
-		<string> 	quizID
-
-
-	OUTPUT:
-		"success"
-
-	SUMMARY:
-		closing the quiz
 
 
 CreateRoster.php ==========================================================
@@ -364,7 +385,7 @@ EditQuiz.php ==========================================================
   	SUMMARY:
     	edit the quiz  
 
-EditNotes.php ========================================================
+CreateNote.php ========================================================
 
 	SESSION:
 		<string> 	teacherID
@@ -382,7 +403,25 @@ EditNotes.php ========================================================
 		    <bool> 		success
 		    <string>	message
 
-Notes.php ============================================================
+EditNote.php ========================================================
+
+	SESSION:
+		<string> 	teacherID
+
+	INPUT:
+		<string>	quizID
+		<list> 		studentID
+		<list>		notes
+		<list> 		lateAllowed 		
+		<list> 		exitAllowed 
+		<list>		moreAllowed
+
+	OUTPUT:
+		[JSON OBJECT] output
+		    <bool> 		success
+		    <string>	message
+
+ ViewNote.php ============================================================
 
 	SESSION:
 		<string> 	teacherID
@@ -403,19 +442,24 @@ Notes.php ============================================================
 		<list> 		retakeAllowed
 
 
-Save.php =============================================================
 
-	SESSION:
-		<string> 	MystudentID
-		<string>	MyclassID
 
-	INPUT:
-		<string> 	quizID
-		<list> 		code
 
-	OUTPUT:
-	[JSON OBJECT] output
-		<bool> 		success
-		<string>	message
-CheckLogin.php - Will finish after netbadge
+
+PYTHON FILE ==========================================================
+
+NOTE: My PHP file will create the student files and delete after python call.
+		It will read the generated file and delete at end (make sure i have permission)
+INPUT: 
+	studentFile = file_of_the_student_uniquely_defined.c (it could be .cpp, or whatever)
+	gradeFile = file_of_the_main.c 
+	languge = such as "C"
+
+EXEC: 
+	$str = "python os-system-calls.py " . $studentFile . " " . $gradeFile . " " $language;
+
+OUTPUT:
+	outputFile = file_of_the_student_uniquely_defined.txt (same as input but diff extension)
+		this will be JSON
+
 
