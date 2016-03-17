@@ -81,13 +81,9 @@
 		var myInterval;
 		var timerTime;
 
-<<<<<<< HEAD
-		var enteredTest = 0;
-=======
 		//determined if test was entered 
 		//(to prevent action occuring if alt-tabbing before test is entered)
-		var EnteredTest = 0;
->>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
+		var enteredTest = 0;
 
 		//initialize editor
 	    var editor = ace.edit("editor");
@@ -182,13 +178,7 @@
 
 		//detection of alt-tabbing
 		$(window).blur(function(){
-<<<<<<< HEAD
-			//ALERT THAT IT BLURRED
 			if(enteredTest){
-=======
-			//pause test if alt-tabbed
-			if(EnteredTest){
->>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
 				pauseTest();
 			}
 			copied = 0;
@@ -206,7 +196,6 @@
 		//save code every 10 seconds
 		setInterval(function() {
 		    saveToServer();
-<<<<<<< HEAD
 		}, 30000); 
 
 	    //if fullscreen changed
@@ -297,7 +286,7 @@
 				        	timeAllowed = data.timeAllowed;
 				        }
 
-				        clearInterval(myTimer);
+				        clearInterval(myInterval);
 			        	myInterval = setInterval(function() { myTimer() }, 1000);
 
 			        	var quizName = data.quizName;
@@ -338,10 +327,6 @@
 				alert("Entered the wrong quiz ID");
 			}
 		}
-
-=======
-		}, 10000); 
->>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
 		</script>
 	</body>
 </html>
