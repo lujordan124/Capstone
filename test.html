@@ -239,14 +239,15 @@
 	    function pauseTest() {
 	    	document.getElementById("test").style.display = "none";
 			document.getElementById("resumeTesting").style.display = "block";
-			clearInterval(myInterval);
 	    }
 
 	    function resumeTest() {
 	    	document.getElementById("test").style.display = "block";
 			document.getElementById("resumeTesting").style.display = "none";
 			var date = new Date().getTime();
-			timerTime =  date + (timeAllowed * 60 * 1000);
+			clearInterval(myInterval);
+			timerTime =  date + (timeAllowed * 1000);
+			myInterval = setInterval(function() { myTimer() }, 1000);
 	    }
 
 	    function myTimer() {
