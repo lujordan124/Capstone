@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title> ace </title>
+		<title> Quiz Sample </title>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -8,6 +8,9 @@
 
 		<!-- jQuery library -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+		<!--import our javascript methods-->
+		<script src="test.js"></script>
 
 		<!-- ACE -->
 		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -47,8 +50,8 @@
 					<pre id="editor"></pre><br>
 				</div>
 				<div id = "right">
-					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)"> FINISH </button>
-					<h2 class = "pull-left"> The results of the test </h2>
+					<button class = "btn btn-default pull-right" id = "finish" onclick="finishTest(document.body)">FINISH</button>
+					<h2 class = "pull-left">The results of the test</h2>
 					<textarea readonly id = "result"></textarea>
 				</div>
 			</div>
@@ -68,15 +71,23 @@
 
 		var timeAllowed = 0; 
 		var quizID;
+
 		//for determining which question we are currently on
 		var qIndex = 0;
+
 		//determine if copied text was inside or outside window
 		var copied = 0;
 
 		var myInterval;
 		var timerTime;
 
+<<<<<<< HEAD
 		var enteredTest = 0;
+=======
+		//determined if test was entered 
+		//(to prevent action occuring if alt-tabbing before test is entered)
+		var EnteredTest = 0;
+>>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
 
 		//initialize editor
 	    var editor = ace.edit("editor");
@@ -148,9 +159,8 @@
 			        }
 	    		});
 			});
-
+			//on previous click when going through questions
 			$('#previous').click(function() {
-				//on previous click, replace title with question
 				saveText();
 				qIndex--;
 				loadText();
@@ -158,6 +168,7 @@
 				document.getElementById('problemNum').innerHTML = qIndex + 1;
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
+			//on next click when going through questions
 			$('#next').click(function() {
 				//on previous click, replace title with question
 				saveText();
@@ -168,54 +179,23 @@
 	        	document.getElementById("description").innerHTML = question[qIndex].description;
 			});
 		});
-		
-		function saveText() {
-			currentCode[qIndex] = editor.getValue();
-			currentFeedback[qIndex] = document.getElementById("result").innerHTML;
-		}
-		function loadText() {
-			editor.setValue(currentCode[qIndex], 1);
-			document.getElementById("result").innerHTML = currentFeedback[qIndex];
-		}
-		function saveToServer(){
-			$.ajax({
-				type: "POST",
-		        url: "Save.php",
-		        data: {
-		        	code : currentCode, 
-		        },
-		        success: function(data){
-		     		alert("Code saved.");
-		        }
-    		});
-		}
-		//hide previous button on first question
-		
+
 		//detection of alt-tabbing
-		$(window).focusin(function() {
-			//alert("I'M BACK");
-		});
 		$(window).blur(function(){
+<<<<<<< HEAD
 			//ALERT THAT IT BLURRED
 			if(enteredTest){
+=======
+			//pause test if alt-tabbed
+			if(EnteredTest){
+>>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
 				pauseTest();
 			}
-			//alert("BLUR");
 			copied = 0;
-			// window.location.replace("offocus.php");
 		});
-	
-		//when test is finished
-		function finishTest(element) {
-	    	document.getElementById("bottom").style.disply = "none";
-			document.getElementById("problem").text = "hidden";
-			document.getElementById('countdown').style.display = "none";
-	    	document.webkitExitFullscreen();
-			document.mozCancelFullscreen();
-			document.exitFullscreen();
-	    }
 
-	    if (document.addEventListener) {
+		//event listener for fullscreen change
+		if (document.addEventListener) {
 		    document.addEventListener('webkitfullscreenchange', exitTest, false);
 		    document.addEventListener('mozfullscreenchange', exitTest, false);
 		    document.addEventListener('fullscreenchange', exitTest, false);
@@ -223,9 +203,10 @@
 		    //document.addEventListener('unload', exitTest);
 		}
 
-		//save every 30 seconds
+		//save code every 10 seconds
 		setInterval(function() {
 		    saveToServer();
+<<<<<<< HEAD
 		}, 30000); 
 
 	    //if fullscreen changed
@@ -358,6 +339,9 @@
 			}
 		}
 
+=======
+		}, 10000); 
+>>>>>>> 47ffb067e602282929ed4241cc47e0b9a46d2dd9
 		</script>
 	</body>
 </html>
