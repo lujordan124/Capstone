@@ -5,9 +5,14 @@ function saveText() {
 }
 
 //if coming back to test, retrieve code previously saved and display
-function loadText() {
-	editor.setValue(currentCode[qIndex], 1);
-	document.getElementById("result").innerHTML = currentFeedback[qIndex];
+function loadText() {	
+	if (currentCode[qIndex] != null) {
+		editor.setValue(currentCode[qIndex], 1);
+	}
+
+	if (currentFeedback[qIndex] != null) {
+		document.getElementById("result").innerHTML = currentFeedback[qIndex];
+	}
 }
 
 //save code to server (done automatically)
@@ -59,15 +64,17 @@ function exitTest() {
 function pauseTest() {
 	document.getElementById("test").style.display = "none";
 	document.getElementById("resumeTesting").style.display = "block";
-	clearInterval(myInterval);
 }
 
-//resume test if returning
+//resume test after student comes back
 function resumeTest() {
 	document.getElementById("test").style.display = "block";
 	document.getElementById("resumeTesting").style.display = "none";
 	var date = new Date().getTime();
-	timerTime =  date + (timeAllowed * 60 * 1000);
+	clearInterval(myInterval);
+	timerTime =  date + (timeAllowed * 1000);
+	myInterval = setInterval(myTimer, 1000);
+	//qIndex = 0;
 }
 
 //for the timer
@@ -103,43 +110,14 @@ function loadButtons() {
 	}
 }
 
-//retrieve the questions from the server
-function getQuestions() {
-	$.ajax({
-        type: "POST",
-        url: "GetQuestions.php",
-        data: {quizID: quizID},
-        dataType: "JSON",
-        success: function(data){
-        	//retrieve quiz from database in JSON format
-        	//document.getElementById("quizName").innerHTML = data.quizName;
-        	if (data.success) {
-        		document.getElementById("description").innerHTML = data.question[0];
-	        	var i;
-	        	for (i = 0; i < data.question.length; i++) {
-	        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
-	        		currentCode[i] = data.codes[i];
-	        		currentFeedback[i] = data.feedbacks[i];
-	        	}
-
-	        	timeAllowed = data.timeAllowed;
-	        	myInterval = setInterval(function() { myTimer() }, 1000);
-	        	var quizName = data.quizName;
-	        	return 1;
-	        } else {
-	        	return 0;
-	        }
-        }
-	});
-}
-
 //force full screen
 function requestFullScreen(element) {
-	EnteredTest = 1;
-	quizID = document.getElementById("quizIDInput").value;
-	// resumeTest();
-
-	if (getQuestions() == 1) {
+	checkVar = 1;
+	if (checkVar == 1) {
+		document.getElementById("problemNum").innerHTML = "Problem " + questions[qIndex].number;
+		document.getElementById("description").innerHTML = questions[qIndex].description;
+		quizID = document.getElementById("quizIDInput").value;
+		enteredTest = 1;
 		resumeTest();
 		loadButtons();
 
@@ -160,7 +138,7 @@ function requestFullScreen(element) {
 			}
 		}
 	}
-	// else {
-		// alert("Entered the wrong quiz ID");
-	// }
+	else {
+		alert("Entered the wrong quiz ID");
+	}
 }

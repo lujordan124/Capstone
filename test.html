@@ -64,7 +64,9 @@
 		<script type="text/javascript">
 		//for storing all the questions
 
-		var questions = [];
+		var questions = [{description: "hi there", numSubmissions: 1, number: 1}, 
+						 {description: "whee", numSubmissions: 1, number: 2}, 
+						 {description: "bahaha", numSubmissions: 1, number: 3}];
 		
 		var currentCode = [];
 		var currentFeedback = [];
@@ -119,7 +121,7 @@
 	    });
 
 	    //initialize all buttons
-		$(document).ready(function() {
+		$(document).ready(function(){
 			//on submitting code
 			$('#submitCode').click(function() {
 				if (confirm("Are you sure you want to want to submit the quiz? You will not be able to make changes once you have submitted the assignment.")) {
@@ -158,29 +160,14 @@
 	    		});
 			});
 
-			function saveText() {
- 				currentCode[qIndex] = editor.getValue();
-				currentFeedback[qIndex] = document.getElementById("result").innerHTML;
- 			}
- 
- 			function loadText() {
- 				if (currentCode[qIndex] != null) {
-	 				editor.setValue(currentCode[qIndex], 1);
-	 			}
-
- 				if (currentFeedback[qIndex] != null) {
-	 				document.getElementById("result").innerHTML = currentFeedback[qIndex];
-	 			}
- 			}
-
 			//on previous click when going through questions
 			$('#previous').click(function() {
 				saveText();
 				qIndex--;
 				loadText();
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = qIndex + 1;
-	        	document.getElementById("description").innerHTML = question[qIndex].description;
+				document.getElementById('problemNum').innerHTML = "Problem " + questions[qIndex].number;
+	        	document.getElementById("description").innerHTML = questions[qIndex].description;
 			});
 			//on next click when going through questions
 			$('#next').click(function() {
@@ -189,8 +176,8 @@
 				qIndex++;
 				loadText();
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = qIndex + 1;
-	        	document.getElementById("description").innerHTML = question[qIndex].description;
+				document.getElementById('problemNum').innerHTML = "Problem " + questions[qIndex].number;
+	        	document.getElementById("description").innerHTML = questions[qIndex].description;
 			});
 		});
 
@@ -216,71 +203,7 @@
 		    saveToServer();
 		}, 30000); 
 
-	    //if fullscreen changed
-		function exitTest() {
-			saveText();
-			if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-				pauseTest();
-
-				$.ajax({
-					type: "POST",
-			        url: "SubmitQuiz.php",
-			        data: {
-			        	quizID : quizID, 
-			        },
-			        success: function(data){
-			     		// alert("Code saved.");
-			        }
-	    		});
-
-				copied = 0;
-			}
-		}
-	    function pauseTest() {
-	    	document.getElementById("test").style.display = "none";
-			document.getElementById("resumeTesting").style.display = "block";
-	    }
-
-	    function resumeTest() {
-	    	document.getElementById("test").style.display = "block";
-			document.getElementById("resumeTesting").style.display = "none";
-			var date = new Date().getTime();
-			clearInterval(myInterval);
-			timerTime =  date + (timeAllowed * 1000);
-			myInterval = setInterval(myTimer, 1000);
-	    }
-
-	    function myTimer() {
-			//TIMER FUNCTIONS
-			var counterDate = new Date().getTime()
-			var countdown = document.getElementById('countdown');
-			var secondsLeft = timerTime - counterDate;
-
-			var minutes = Math.floor(secondsLeft/60000);
-			var seconds = ((secondsLeft%60000)/1000).toFixed(0);
-			
-			if (seconds > 10) {
-				countdown.innerHTML = '' + minutes + ':' + seconds;
-			} else {
-				countdown.innerHTML = '' + minutes + ':0' + seconds;
-			}
-		}
-
-		function loadButtons() {
-			//next and previous buttons
-			if(qIndex <= 0){
-				document.getElementById('previous').style.display = 'none';
-			} else {
-				document.getElementById('previous').style.display = 'inline-block';
-			}
-			//hide next button on last question
-			if(qIndex == questions.length-1 || qIndex == -1){
-				document.getElementById('next').style.display = 'none';
-			} else {
-				document.getElementById('next').style.display = 'inline-block';
-			}
-		}
-
+	    //retrieving questions from server
 		function getQuestions() {
 			$.ajax({
 		        type: "POST",
@@ -292,7 +215,6 @@
 		        	//document.getElementById("quizName").innerHTML = data.quizName;
 		        	if (data.success) {
 		        		checkVar = 1;
-		        		document.getElementById("description").innerHTML = data.question[0];
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
 			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
@@ -301,6 +223,10 @@
 				        		currentFeedback[i] = data.feedback[i];
 			        		}
 			        	}
+			        	
+			        	//change for first question/description
+			        	document.getElementById("problemNum").innerHTML = "Problem " + questions[0].number;
+			        	document.getElementById("description").innerHTML = questions[0].description;
 
 			        	if (data.timeLeft != null) {
 			        		timeAllowed = data.timeLeft;
@@ -319,36 +245,6 @@
 			        }
 		        }
     		});
-		}
-
-		//force full screen
-		function requestFullScreen(element) {
-			if (checkVar == 1) {
-				quizID = document.getElementById("quizIDInput").value;
-				enteredTest = 1;
-				resumeTest();
-				loadButtons();
-
-				var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-				if (requestMethod) {
-					requestMethod.call(element);
-
-					document.getElementById("fullscreen").style.display = "none";
-					document.getElementById("quizIDDiv").style.display = "none";
-					document.getElementById("countdown").style.display = "block";
-					document.getElementById("bottom").style.display = "block";
-					document.getElementById("problem").style.display = "block";
-
-				} else if (typeof window.ActiveXObject !== "undefined") {
-					var wscript  = new ActiveXObject("WScript.Shell");
-					if (wscript != null) {
-						wscript.SendKeys("{F11}");
-					}
-				}
-			}
-			else {
-				alert("Entered the wrong quiz ID");
-			}
 		}
 		</script>
 	</body>
