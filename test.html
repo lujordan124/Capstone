@@ -63,10 +63,7 @@
 
 		<script type="text/javascript">
 		//for storing all the questions
-
-		var questions = [{description: "hi there", numSubmissions: 1, number: 1}, 
-						 {description: "whee", numSubmissions: 1, number: 2}, 
-						 {description: "bahaha", numSubmissions: 1, number: 3}];
+		var questions = [];
 		
 		var currentCode = [];
 		var currentFeedback = [];
@@ -88,6 +85,8 @@
 		//determined if test was entered 
 		//(to prevent action occuring if alt-tabbing before test is entered)
 		var enteredTest = 0;
+
+		var finished = 0;
 
 		//initialize editor
 	    var editor = ace.edit("editor");
@@ -166,7 +165,7 @@
 				qIndex--;
 				loadText();
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = "Problem " + questions[qIndex].number;
+				document.getElementById('problemNum').innerHTML = "Problem #" + questions[qIndex].number;
 	        	document.getElementById("description").innerHTML = questions[qIndex].description;
 			});
 			//on next click when going through questions
@@ -176,17 +175,19 @@
 				qIndex++;
 				loadText();
 				loadButtons();
-				document.getElementById('problemNum').innerHTML = "Problem " + questions[qIndex].number;
+				document.getElementById('problemNum').innerHTML = "Problem #" + questions[qIndex].number;
 	        	document.getElementById("description").innerHTML = questions[qIndex].description;
 			});
 		});
 
 		//detection of alt-tabbing
 		$(window).blur(function(){
-			if(enteredTest){
-				pauseTest();
+			if(finished == 0){
+				if(enteredTest){
+					pauseTest();
+				}
+				copied = 0;
 			}
-			copied = 0;
 		});
 
 		//event listener for fullscreen change
@@ -223,9 +224,9 @@
 				        		currentFeedback[i] = data.feedback[i];
 			        		}
 			        	}
-			        	
+
 			        	//change for first question/description
-			        	document.getElementById("problemNum").innerHTML = "Problem " + questions[0].number;
+			        	document.getElementById("problemNum").innerHTML = "Problem #" + questions[0].number;
 			        	document.getElementById("description").innerHTML = questions[0].description;
 
 			        	if (data.timeLeft != null) {

@@ -1,3 +1,35 @@
+//force full screen
+function requestFullScreen(element) {
+	if (checkVar == 1) {
+		document.getElementById("problemNum").innerHTML = "Problem " + questions[qIndex].number;
+		document.getElementById("description").innerHTML = questions[qIndex].description;
+		quizID = document.getElementById("quizIDInput").value;
+		enteredTest = 1;
+		resumeTest();
+		loadButtons();
+
+		var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+		if (requestMethod) {
+			requestMethod.call(element);
+
+			document.getElementById("fullscreen").style.display = "none";
+			document.getElementById("quizIDDiv").style.display = "none";
+			document.getElementById("countdown").style.display = "block";
+			document.getElementById("bottom").style.display = "block";
+			document.getElementById("problem").style.display = "block";
+
+		} else if (typeof window.ActiveXObject !== "undefined") {
+			var wscript  = new ActiveXObject("WScript.Shell");
+			if (wscript != null) {
+				wscript.SendKeys("{F11}");
+			}
+		}
+	}
+	else {
+		alert("Entered the wrong quiz ID");
+	}
+}
+
 //save the current code and feedback
 function saveText() {
 	currentCode[qIndex] = editor.getValue();
@@ -31,9 +63,18 @@ function saveToServer(){
 
 //when test is finished
 function finishTest(element) {
-	document.getElementById("bottom").style.disply = "none";
-	document.getElementById("problem").text = "hidden";
+	finished = 1;
+
+	document.getElementById("bottom").style.display = "none";
+	document.getElementById("problemNum").style.display = "none";
+	document.getElementById("description").innerHTML = "You are now finished. You may close the window."
 	document.getElementById('countdown').style.display = "none";
+
+	document.removeEventListener('webkitfullscreenchange', exitTest, false);
+    document.removeEventListener('mozfullscreenchange', exitTest, false);
+    document.removeEventListener('fullscreenchange', exitTest, false);
+    document.removeEventListener('MSFullscreenChange', exitTest, false);
+
 	document.webkitExitFullscreen();
 	document.mozCancelFullscreen();
 	document.exitFullscreen();
@@ -107,38 +148,5 @@ function loadButtons() {
 		document.getElementById('next').style.display = 'none';
 	} else {
 		document.getElementById('next').style.display = 'inline-block';
-	}
-}
-
-//force full screen
-function requestFullScreen(element) {
-	checkVar = 1;
-	if (checkVar == 1) {
-		document.getElementById("problemNum").innerHTML = "Problem " + questions[qIndex].number;
-		document.getElementById("description").innerHTML = questions[qIndex].description;
-		quizID = document.getElementById("quizIDInput").value;
-		enteredTest = 1;
-		resumeTest();
-		loadButtons();
-
-		var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
-		if (requestMethod) {
-			requestMethod.call(element);
-
-			document.getElementById("fullscreen").style.display = "none";
-			document.getElementById("quizIDDiv").style.display = "none";
-			document.getElementById("countdown").style.display = "block";
-			document.getElementById("bottom").style.display = "block";
-			document.getElementById("problem").style.display = "block";
-
-		} else if (typeof window.ActiveXObject !== "undefined") {
-			var wscript  = new ActiveXObject("WScript.Shell");
-			if (wscript != null) {
-				wscript.SendKeys("{F11}");
-			}
-		}
-	}
-	else {
-		alert("Entered the wrong quiz ID");
 	}
 }
