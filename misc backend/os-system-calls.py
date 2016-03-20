@@ -8,12 +8,9 @@ if __name__ == "__main__":
 	num_args = len(sys.argv)
 	command = "./a.out"
 	output_data = {}
-	output_data['standard_out'] = ''
-	output_data['standard_error'] = ''
+	output_data.setdefault('standard_out', '')
+	output_data.setdefault('standard_error', '')
 	output_file = sys.argv[1] + '.out'
-	# params = ['gcc', '-o', output_file, sys.argv[1], sys.argv[2]]
-	# sp = subprocess.Popen(params)
-	# sp.communicate()
 	if num_args == 3: # this file and param file
 		try:
 			#
@@ -81,7 +78,8 @@ if __name__ == "__main__":
 
 	rc = os.remove(output_file)
 	print 'remove rc: ' + str(rc)
-	with open('data.txt', 'w') as outfile:
+	output_file = sys.argv[1] + '.txt'
+	with open(output_file, 'w') as outfile:
 		json.dump(output_data, outfile)
 	# a+rwx
-	os.chmod('data.txt', 0777)
+	os.chmod(output_file, 0777)
