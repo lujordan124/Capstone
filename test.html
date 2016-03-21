@@ -10,7 +10,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 		<!--import our javascript methods-->
-		<script src="test.js"></script>
+		<script type="text/javascript" src="test.js"></script>
 
 		<!-- ACE -->
 		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -208,6 +208,7 @@
 		function getQuestions() {
 			$.ajax({
 		        type: "POST",
+		        async: false,
 		        url: "GetQuestions.php",
 		        data: {quizID: quizID},
 		        dataType: "JSON",
@@ -215,7 +216,6 @@
 		        	//retrieve quiz from database in JSON format
 		        	//document.getElementById("quizName").innerHTML = data.quizName;
 		        	if (data.success) {
-		        		checkVar = 1;
 			        	var i;
 			        	for (i = 0; i < data.question.length; i++) {
 			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
@@ -241,8 +241,10 @@
 			        	myInterval = setInterval(myTimer, 1000);
 
 			        	var quizName = data.quizName;
+
+			        	return 1;
 			        } else {
-			        	checkVar = 0;
+			        	return 0;
 			        }
 		        }
     		});
