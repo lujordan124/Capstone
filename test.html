@@ -44,7 +44,7 @@
 			</div>
 			<div id = "bottom" style="display:none">
 				<div id = "left">
-					<h2 class = "pull-left"> Code here</h2>
+					<h2 class = "pull-left">Code here</h2>
 					<button class="btn btn-default pull-right" id = "submitCode">SUBMIT</button>
 					<button class="btn btn-default pull-right" id = "compile">COMPILE</button>
 					<pre id="editor"></pre><br>
@@ -70,9 +70,6 @@
 
 		var timeAllowed = 0; 
 		var quizID;
-
-		//determine if we successfully retrieved questions
-		var checkVar = 0;
 
 		//for determining which question we are currently on
 		var qIndex = 0;
@@ -215,9 +212,6 @@
 		        dataType: "JSON",
 		        success: function(data){
 		        	//retrieve quiz from database in JSON format
-		        	//document.getElementById("quizName").innerHTML = data.quizName;
-		        	checkVar = 1;
-
 		        	var i;
 		        	for (i = 0; i < data.question.length; i++) {
 		        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
@@ -243,10 +237,11 @@
 		        	myInterval = setInterval(myTimer, 1000);
 
 		        	var quizName = data.quizName;
+		        	return 1;
 
 		        }, 
 		        error: function(data){
-		        	checkVar = 0;
+		        	return 0;
 		        }
     		});
 		}
