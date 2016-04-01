@@ -67,6 +67,7 @@ class Compiler:
 		os.chmod(self.output_file, 0777)
 	
 if __name__ == "__main__":
+	os.putenv("TMPDIR", "/tmp")
 	compiler = Compiler(sys.argv[1])
 	compiler.compile(sys.argv)
 	compiler.run()
