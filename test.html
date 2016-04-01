@@ -10,7 +10,7 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 		<!--import our javascript methods-->
-		<script src="test.js"></script>
+		<script type="text/javascript" src="test.js"></script>
 
 		<!-- ACE -->
 		<script src="ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -44,7 +44,7 @@
 			</div>
 			<div id = "bottom" style="display:none">
 				<div id = "left">
-					<h2 class = "pull-left"> Code here</h2>
+					<h2 class = "pull-left">Code here</h2>
 					<button class="btn btn-default pull-right" id = "submitCode">SUBMIT</button>
 					<button class="btn btn-default pull-right" id = "compile">COMPILE</button>
 					<pre id="editor"></pre><br>
@@ -70,8 +70,6 @@
 
 		var timeAllowed = 0; 
 		var quizID;
-
-		var checkVar = 0;
 
 		//for determining which question we are currently on
 		var qIndex = 0;
@@ -208,42 +206,42 @@
 		function getQuestions() {
 			$.ajax({
 		        type: "POST",
+		        async: false,
 		        url: "GetQuestions.php",
 		        data: {quizID: quizID},
 		        dataType: "JSON",
 		        success: function(data){
 		        	//retrieve quiz from database in JSON format
-		        	//document.getElementById("quizName").innerHTML = data.quizName;
-		        	if (data.success) {
-		        		checkVar = 1;
-			        	var i;
-			        	for (i = 0; i < data.question.length; i++) {
-			        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
-			        		if (data.continue == 1) {
-				        		currentCode[i] = data.code[i];
-				        		currentFeedback[i] = data.feedback[i];
-			        		}
-			        	}
+		        	var i;
+		        	for (i = 0; i < data.question.length; i++) {
+		        		questions[i] = {description: data.question[i], numSubmissions: data.numSubmission[i], number: i+1};
+		        		if (data.continue == 1) {
+			        		currentCode[i] = data.code[i];
+			        		currentFeedback[i] = data.feedback[i];
+		        		}
+		        	}
 
-			        	//change for first question/description
-			        	document.getElementById("problemNum").innerHTML = "Problem #" + questions[0].number;
-			        	document.getElementById("description").innerHTML = questions[0].description;
+		        	//change for first question/description
+		        	document.getElementById("problemNum").innerHTML = "Problem #" + questions[0].number;
+		        	document.getElementById("description").innerHTML = questions[0].description;
 
-			        	if (data.timeLeft != null) {
-			        		timeAllowed = data.timeLeft;
-				        } else {
-				        	timeAllowed = data.timeAllowed;
-				        }
-
-				        var date = new Date().getTime();
-						clearInterval(myInterval);
-						timerTime =  date + (timeAllowed * 1000);
-			        	myInterval = setInterval(myTimer, 1000);
-
-			        	var quizName = data.quizName;
+		        	if (data.timeLeft != null) {
+		        		timeAllowed = data.timeLeft;
 			        } else {
-			        	checkVar = 0;
+			        	timeAllowed = data.timeAllowed;
 			        }
+
+			        var date = new Date().getTime();
+					clearInterval(myInterval);
+					timerTime =  date + (timeAllowed * 1000);
+		        	myInterval = setInterval(myTimer, 1000);
+
+		        	var quizName = data.quizName;
+		        	return 1;
+
+		        }, 
+		        error: function(data){
+		        	return 0;
 		        }
     		});
 		}

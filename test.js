@@ -1,7 +1,7 @@
 //force full screen
 function requestFullScreen(element) {
-	if (checkVar == 1) {
-		document.getElementById("problemNum").innerHTML = "Problem " + questions[qIndex].number;
+	if (getQuestions() == 1) {
+		document.getElementById("problemNum").innerHTML = "Problem #" + questions[qIndex].number;
 		document.getElementById("description").innerHTML = questions[qIndex].description;
 		quizID = document.getElementById("quizIDInput").value;
 		enteredTest = 1;
